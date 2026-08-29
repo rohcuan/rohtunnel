@@ -2,6 +2,38 @@
 
 Dokumen teknis cara menjalankan aplikasi secara lokal. Untuk deployment produksi lihat plan.md Fase 9.
 
+## Deploy 1-Click (goal.md)
+
+1. Buat repo GitHub publik (contoh: github.com/rohcuan/rohtunnel, branch `main`).
+2. Paste `docker-stack.yml` di Portainer → Stacks → Add stack → Deploy. Ubah `APP_REPO`/`APP_BRANCH`/port bila perlu.
+3. Setelah berjalan, repo boleh diprivat kembali — source & node_modules sudah tersimpan di container, data di volume `rohtunnel-data` (`/app/data`).
+4. Admin pertama: username `admin`, password random dicetak SEKALI di container logs.
+
+Detail `entrypoint.sh`:
+- Unduh source: `$APP_REPO/archive/refs/heads/$APP_BRANCH.tar.gz` via node fetch (tanpa curl/wget di image).
+- Marker `/app/app/.version` → re-download HANYA bila branch berubah atau source belum ada (tidak auto-update).
+- Marker `/app/app/.installed` → `npm install --omit=dev` sekali; fallback install `python3 make g++` bila prebuild better-sqlite3 gagal.
+- `exec npm start` (PORT dari env).
+
+Uji lokal dengan podman (host immutable Fedora, via `distrobox-host-exec`):
+```bash
+# fake repo server (struktur seperti GitHub)
+mkdir -p /tmp/opencode/fakerepo/raw/main /tmp/opencode/fakerepo/archive/refs/heads
+cp entrypoint.sh /tmp/opencode/fakerepo/raw/main/entrypoint.sh
+tar --exclude=node_modules --exclude=data --exclude=.git -czf /tmp/opencode/fakerepo/archive/refs/heads/main.tar.gz -C . .
+python3 -m http.server 8000 --directory /tmp/opencode/fakerepo &
+
+distrobox-host-exec podman run -d --name rt-test --network host \
+  -e APP_REPO=http://127.0.0.1:8000 -e APP_BRANCH=main -e PORT=3001 \
+  -v rt-data:/app/data node:20-slim \
+  sh -c 'node -e "fetch(process.env.APP_REPO + \"/raw/\" + process.env.APP_BRANCH + \"/entrypoint.sh\").then(r => { if (!r.ok) process.exit(1); return r.arrayBuffer(); }).then(b => require(\"fs\").writeFileSync(\"/tmp/entrypoint.sh\", Buffer.from(b)))" && sh /tmp/entrypoint.sh'
+
+# verifikasi: log "[app] RohTunnel berjalan", landing 200, restart tanpa re-download
+distrobox-host-exec curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:3001/
+distrobox-host-exec podman logs rt-test
+distrobox-host-exec podman restart rt-test   # harus langsung start (idempoten)
+```
+
 ## Prasyarat
 
 - Node.js >= 18, npm

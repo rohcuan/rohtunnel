@@ -1,5 +1,20 @@
 # Progress
 
+## Fase 9: Deploy 1-Click — SELESAI (29 Agustus 2026)
+
+- [x] Repo GitHub dibuat: **github.com/rohcuan/rohtunnel** (private, branch `main`) — diprivat/dipublik manual oleh user sesuai goal.md
+- [x] `entrypoint.sh` (root repo): unduh source dari `APP_REPO/archive/refs/heads/$APP_BRANCH.tar.gz` via node fetch (tanpa curl/wget), extract, marker `.version` (re-download hanya jika branch berubah/source belum ada), `npm install --omit=dev` sekali (marker `.installed`, fallback install build tools bila prebuild gagal), lalu `exec npm start`
+- [x] `docker-stack.yml`: stack Portainer — image `node:20-slim`, env `APP_REPO`/`APP_BRANCH`/`PORT`/`TZ`, volume `rohtunnel-data:/app/data`, port 8080:3000; command mengunduh entrypoint.sh dari repo lalu menjalankannya (logika berat semua di entrypoint, sesuai goal)
+- [x] `Dockerfile` opsional (bila ingin build image custom)
+- [x] Uji end-to-end dengan podman (host, via distrobox-host-exec) + fake repo server (python3 http.server): install pertama sukses (migrasi + seed + app jalan di port 3001), **restart idempoten** (tanpa re-download/re-install, langsung start), landing 200
+
+Catatan:
+
+1. Flow goal: repo dipublik → paste docker-stack.yml di Portainer → deploy → repo diprivat lagi. Setelah install, source & node_modules aman di dalam container/volume sehingga privat tidak masalah.
+2. `TARBALL_GITHUB_STRUCTURE`: entrypoint memakai `cp -a /tmp/appsrc/. "$APP_DIR/"` (bukan `*/.`) agar bekerja untuk tarball GitHub (folder `repo-branch/`) maupun root-`./`.
+3. Test podman: `podman run --network host -e APP_REPO=http://127.0.0.1:8000 -e PORT=3001 -v rohtunnel-test-data:/app/data node:20-slim sh -c 'node -e "fetch(...entrypoint.sh...)" && sh /tmp/entrypoint.sh'` dengan fakerepo di `/tmp/opencode/fakerepo` (struktur `raw/main/entrypoint.sh` + `archive/refs/heads/main.tar.gz`).
+4. SIGTERM warning saat podman restart adalah normal (node tidak handle SIGTERM; restart: unless-stopped menanganinya di swarm).
+
 ## Fase 8: Telegram Bot & Backup + Setup Template — SELESAI (29 Agustus 2026)
 
 - [x] Migrasi `007_backup_settings.sql`: tabel `backup_settings` (daily/weekly/monthly, value, active, last_slot) + seed 3 baris
@@ -138,4 +153,4 @@ Catatan penting:
 
 ## Fase berikutnya
 
-- Fase 9: Deploy (Dockerfile, docker-stack.yml, entrypoint.sh, seed first-run, uji 1-click) — belum dimulai
+- Semua fase plan.md selesai (0-9). Pekerjaan lanjutan opsional: real template config (isi XL Edu/dll), pricing per-aksi, pengukuran pemakaian bandwidth.
