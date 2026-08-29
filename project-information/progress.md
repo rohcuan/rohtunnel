@@ -1,5 +1,13 @@
 # Progress
 
+## Test Real GitHub — SELESAI (29 Agustus 2026)
+
+- [x] Repo **github.com/rohcuan/rohtunnel dibuat PUBLIC** untuk testing (user akan privatkan kembali setelah deploy produksi)
+- [x] Container dev `rohtunnel-dev` jalan di host via podman (`--network host`, `PORT=3000`, volume `rohtunnel-dev-data`) memakai `APP_REPO` GitHub asli + `docker-stack.yml` command yang sama dengan produksi
+- [x] BUG-003 ditemukan & diperbaiki (struktur tarball GitHub): entrypoint kini deteksi folder tunggal `repo-branch/` — lihat bug-found/fixed
+- [x] Verifikasi: install pertama sukses (migrasi + seed + app jalan), landing 200, register/login, dashboard, topup/beli/akun, admin login + halaman admin
+- [x] Catatan: `raw.githubusercontent.com` CDN cache ~2-4 menit setelah push
+
 ## Fase 9: Deploy 1-Click — SELESAI (29 Agustus 2026)
 
 - [x] Repo GitHub dibuat: **github.com/rohcuan/rohtunnel** (private, branch `main`) — diprivat/dipublik manual oleh user sesuai goal.md
