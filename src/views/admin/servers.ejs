@@ -53,20 +53,21 @@
       <p class="muted">Belum ada server. Tambahkan server pertama di atas.</p>
     <% } else { %>
       <% servers.forEach(s => { %>
-        <div class="card server-list-card <%= editing && editing.id == s.id ? 'server-list-card-edit' : '' %>">
-          <div class="server-card-head">
+        <div class="card server-list-card <%= editing && editing.id == s.id ? 'server-list-card-edit server-list-card-open' : '' %>">
+          <button type="button" class="server-card-toggle" onclick="toggleServerCard(this)">
             <div class="server-card-title">
               <strong class="server-card-label"><%= s.label %></strong>
               <span class="badge badge-country"><%= s.code %></span>
             </div>
-            <div class="server-card-actions">
-              <a href="/admin/servers?edit=<%= s.id %>" class="btn btn-outline btn-sm">Edit</a>
-              <a href="/admin/servers/<%= s.id %>/packages" class="btn btn-outline btn-sm">Pricing</a>
-              <form method="post" action="/admin/servers/<%= s.id %>/delete" class="inline-form"
-                    onsubmit="return confirm('Hapus server <%= s.code %> — <%= s.label %> beserta semua package-nya?');">
-                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-              </form>
-            </div>
+            <svg class="chevron server-card-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="server-card-actions">
+            <a href="/admin/servers?edit=<%= s.id %>" class="btn btn-outline btn-sm">Edit</a>
+            <a href="/admin/servers/<%= s.id %>/packages" class="btn btn-outline btn-sm">Pricing</a>
+            <form method="post" action="/admin/servers/<%= s.id %>/delete" class="inline-form"
+                  onsubmit="return confirm('Hapus server <%= s.code %> — <%= s.label %> beserta semua package-nya?');">
+              <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+            </form>
           </div>
           <div class="server-card-body">
             <div class="server-card-info">
@@ -90,4 +91,9 @@
       <% }) %>
     <% } %>
   </div>
+  <script>
+    function toggleServerCard(btn) {
+      btn.closest('.server-list-card').classList.toggle('server-list-card-open');
+    }
+  </script>
 <%- include('../partials/footer') %>
