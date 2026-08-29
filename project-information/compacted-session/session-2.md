@@ -49,8 +49,6 @@ Sesi ini mencakup: (1) auth dengan email, (2) restyle UI mengikuti repo privat R
 - **Keputusan user: dropdown TIDAK menduplikasi menu utama** — item yang sudah ada di grid dashboard dihapus dari dropdown; brand navbar = `/dashboard` (user), `/admin` (admin), `/` (anon)
 - **Auth pages standalone** (login, login-admin, register): background gradien penuh + `login-card` putih (radius 16, shadow `0 10px 40px`) + subtitle + `error-msg` + **pw-toggle** (tombol mata)
 - Landing: hero jadi banner gradien; dashboard user & admin: banner gradien berisi statistik (user: saldo/akun aktif/total; admin: user/server/akun) + menu grid 2 kolom
-- **Dashboard admin dirombak imitasi `rohcuan/rohtembak-xl` (dibaca read-only)**: header `page-title` "Dashboard Admin" + `page-subtitle` "Atur semuanya disini"; kartu **Menu** dengan `.menu-grid` (2 kolom → 1 kolom ≤900px) berisi tombol `.btn-outline` full-width: Kelola User, Manage Server, Manager Akun VPN, QRIS API, Bot Telegram, Notif Bot Telegram, Auto Backup, Template Config, Restore Backup
-- **Setup Notifikasi imitasi `rohtembak-xl/notiftele.html`**: header + pill status bot `.cfg-status.on/off` (link ke Atur Bot Telegram jika belum), kartu `Notifikasi Aktif` dengan baris `.notif-item` (checkbox 18px accent primary + judul + deskripsi), tombol `Simpan Notifikasi`; route GET memberi `botConfigured` dari `telegram_bot_token`
 - `contactAdmin` dari settings dipakai di dropdown/dashboard; search field pakai ikon kaca pembesar (admin akun)
 
 ## 4. Server: Kode + Label (migrasi `009_server_code_label.sql`)
@@ -83,21 +81,17 @@ Urutan iterasi (hasil akhir di `2130468`):
 3. Urutan header **label → kode → negara** (bukan kode dulu)
 4. Info tanpa box per baris → **1 box untuk semua info** (bg `#f8fafc` + border + radius di `.server-card-body`), tanpa garis pemisah antar baris
 5. Nilai info **font regular** (tanpa `cell-mono`, weight 500, bukan 600)
-6. **Badge hanya kode** (`[SRV-A]`): desktop di kanan label (sebaris), mobile (≤640px) turun ke baris bawah label (label `flex: 1 0 100%`, title pakai row+wrap)
-7. **Negara bukan badge** — badge s.d. hanya `[SRV-A]`; negara dipindah jadi baris info `COUNTRY` (nama lengkap, mis. `Indonesia`, bukan kode `ID`) di box bawah bersama Endpoint/API Key/Limit VPN
-8. **Collapsible (default tertutup)** — collapsed hanya tampil label + badge + chevron; klik toggle (seluruh baris) membuka aksi (Edit · Pricing · Hapus) + box info. Kartu yang sedang diedit otomatis terbuka (`server-list-card-open`, chevron rotate 180°); JS `toggleServerCard()` di servers.ejs
-9. **Halaman form terpisah** — box tambah server di atas list diganti tombol "Tambah Server" → `/admin/servers/new`; edit → `/admin/servers/:id/edit`; form di `admin/server-form.ejs` dengan **1 baris = 1 field** (stacked vertikal, tanpa `.row` multi-kolom); sukses redirect ke `/admin/servers`
+6. **Badge kode+negara**: desktop di kanan label (sebaris), mobile (≤640px) di bawah label (column)
 
-Struktur kartu (expanded):
+Struktur akhir kartu:
 ```
 ┌──────────────────────────────────────────┐
-│ LinkGo Metro Teknologi  [SRV-A]      ▾   │  ← collapsed: hanya baris ini (chevron ▸)
+│ LinkGo Metro Teknologi  [SRV-A] [ID]     │  ← mobile: badge turun ke bawah label
 │          Edit · Pricing · Hapus          │
 │ ┌──────────────────────────────────────┐ │
 │ │ ENDPOINT   https://...               │ │  ← 1 box semua info, font regular
 │ │ API KEY    abc123...                 │ │
 │ │ LIMIT VPN  Tak terbatas              │ │
-│ │ COUNTRY    Indonesia                 │ │
 │ └──────────────────────────────────────┘ │
 └──────────────────────────────────────────┘
 ```
@@ -118,12 +112,4 @@ Struktur kartu (expanded):
 - Semua pekerjaan sesi ter-push (`2130468`); container dev berjalan dengan code terbaru
 - DB container: server `SRV-A · LinkGo Metro Teknologi` (id 1, api_key perlu diisi ulang user)
 - Lanjutan opsional (dari sesi 1, belum berubah): isi template config asli, pricing per-aksi, pemakaian bandwidth dari API
-- **Backup/restore berpindah dari raw `.db` ke ZIP berisi banyak file** (alasan: raw .db berisiko beda versi schema/migrasi, korup, dan format tak transparan):
-  - Format `rohtunnel-backup` v1: `manifest.json` (format, version, appVersion, schemaVersion, daftar tabel & file) + `data/<tabel>.json` (array baris object per kolom) + `files/…` untuk aset arbitrer (img/svg/pdf/dll; saat ini kosong, otomatis diambil dari `data/assets/` bila ada, dan kolom BLOB dikodekan `{$blob: base64}` untuk masa depan)
-  - Modul ZIP minimal `src/services/zip.js` TANPA dependensi baru: tulis metode STORE + CRC32; baca metode STORE & DEFLATE (zlib) sehingga zip buatan luar (Telegram/python/arkip) terbaca
-  - `src/services/backup.js`: `exportZip(db)` membangun zip, `createBackupFile` menjadi `.zip`, `listBackups` pada `.zip`. Nama tetap `rohtunnel-<stamp>.zip`
-  - `src/services/restore.js`: `validate(buffer)` hanya cek isi zip+manifest (tidak menyentuh DB); `importFromZip(db, buffer)` — DELETE child-first lalu INSERT parent-first via topo-sort dari FK `PRAGMA foreign_key_list`, map kolom live via `PRAGMA table_info` (kesesuaian lintas versi), reset `sqlite_sequence`, `PRAGMA foreign_key_check` menjamin transaksi di-rollback bila ada pelanggaran; `files/assets/*` ditulis balik ke `data/assets/`
-  - `src/db.js`: pending restore sekarang `restore-pending.zip` + marker `.restore-pending`, diimpor SETELAH migrasi (aman lintas versi); DB lama dititipkan `pre-restore-*.db`; bila zip korup → di-log `[restore] GAGAL` dan boot dilanjutkan dengan data lama (tidak crash loop), marker dihapus & zip disimpan
-  - Route `POST /admin/restore` memvalidasi zip + manifest sebelum menerima (pesan error bila bukan backup rohtunnel); `restore.ejs` & `setup-backup.ejs` diperbarui (.zip)
-  - Teruji lokal: ekspor→impor round-trip 9 tabel + aset, autoincrement lanjut, boot-restore marker, dan fallback zip rusak
 - Konvensi: dokumentasi di `project-information/`; user berkomunikasi dalam Bahasa Indonesia

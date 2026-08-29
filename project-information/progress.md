@@ -1,5 +1,27 @@
 # Progress
 
+## Backup/Restore ZIP (bukan raw .db) — SELESAI (29 Agustus 2026)
+
+- [x] Keputusan: backup raw `.db` berisiko (versi schema/migrasi beda, korup, tidak transparan) → ganti **ZIP berisi banyak file**: `manifest.json` (format `rohtunnel-backup` v1, appVersion, schemaVersion, daftar tabel & file) + `data/<tabel>.json` (array baris object per kolom) + `files/…` untuk aset arbitrer (img/svg/pdf/dll; otomatis dari `data/assets/` bila ada; kolom BLOB dikode `{$blob: base64}`)
+- [x] `src/services/zip.js` ZIP minimal TANPA dependensi baru: tulis STORE + CRC32; baca STORE & DEFLATE (zlib) — zip buatan luar (Telegram/python/arkip) juga terbaca
+- [x] `src/services/backup.js`: `exportZip(db)` → zip; `createBackupFile` = `rohtunnel-<stamp>.zip`; `listBackups` filter `.zip`
+- [x] `src/services/restore.js`: `validate(buffer)` hanya cek isi zip+manifest (tidak sentuh DB, dipakai route sebelum menerima upload); `importFromZip(db, buffer)` DELETE child-first → INSERT parent-first (topo-sort dari `PRAGMA foreign_key_list`), map kolom live via `PRAGMA table_info` (toleran beda versi), reset `sqlite_sequence`, `PRAGMA foreign_key_check` → transaksi rollback bila pelanggaran; aset `files/assets/*` ditulis balik
+- [x] `src/db.js`: pending restore `restore-pending.zip` + marker, diimpor **setelah migrasi** (aman lintas versi); DB lama diarsip `pre-restore-*.db`; zip korup → log `[restore] GAGAL`, data lama tetap dipakai (tidak crash loop), marker dihapus
+- [x] Route `POST /admin/restore` menolak file non-backup dengan error; UI `restore.ejs`/`setup-backup.ejs` memakai `.zip`
+- [x] Verifikasi: round-trip ekspor→impor 9 tabel + aset, autoincrement lanjut, boot-restore marker, fallback zip rusak, zip eksternal DEFLATE, dan backup live dari `/admin/backup/run` (zip berisi data asli container)
+
+## Dashboard & Setup Notifikasi imitasi Rohtembak-XL — SELESAI (29 Agustus 2026)
+
+- [x] Dashboard admin: `page-title` "Dashboard Admin" + `page-subtitle` "Atur semuanya disini" + kartu Menu `.menu-grid` (2 kolom → 1 kolom ≤900px) berisi 9 tombol `.btn-outline` full-width
+- [x] Setup Notif (`/admin/setup-notif`) meniru `rohtembak-xl/notiftele.html`: pill status bot `.cfg-status.on/off` (tautan ke Atur Bot Telegram bila belum), kartu "Notifikasi Aktif" dengan baris `.notif-item` (checkbox 18px accent primary + judul + deskripsi), tombol simpan; GET route melempar `botConfigured` dari `telegram_bot_token`
+- [x] Fix `.page-title` standalone (div tanpa `<h1>`): kini 20px bold; di `.header-section` margin judul 4px / subtitle 0 + gap/flex-wrap (commit `c88a352`)
+
+## Admin: List Server — iterasi lanjutan (COUNTRY, collapsible, form terpisah) — SELESAI (29 Agustus 2026)
+
+- [x] Negara bukan badge: baris info `COUNTRY` nama lengkap (`Indonesia`) dalam box info
+- [x] Collapsible default tertutup: collapsed menampilkan label + badge kode + chevron; aksi (Edit·Pricing·Hapus) + box info muncul saat diklik (`toggleServerCard()`, kartu yang diedit auto-terbuka)
+- [x] Form tambah/edit pindah ke halaman sendiri: `/admin/servers/new` & `/admin/servers/:id/edit`, view `admin/server-form.ejs`, 1 baris = 1 field; list hanya tombol "Tambah Server"
+
 ## Admin: List Server jadi Kartu Panjang — SELESAI (29 Agustus 2026)
 
 - [x] Tabel list server diganti **kartu panjang** per server: header (label + badge kode + badge country + tombol Edit/Pricing/Hapus), body **1 kolom, tiap info satu baris** (label kiri + nilai kanan: Endpoint, API Key, Limit VPN) — mobile: label di atas nilai
