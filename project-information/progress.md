@@ -1,5 +1,13 @@
 # Progress
 
+## Auth: Email + Username lowercase — SELESAI (29 Agustus 2026)
+
+- [x] Migrasi `008_user_email.sql`: kolom `email` di `users` (nullable, UNIQUE index — user lama/admin tanpa email tetap valid)
+- [x] Register wajib email + username + password; username divalidasi `^[a-z0-9]{3,20}$` (huruf/angka kecil saja, otomatis di-lowercase), email format standar, duplikat email/username ditolak (409)
+- [x] Login (user & admin) menerima username ATAU email + password (`WHERE username = ? OR email = ?`)
+- [x] View: form register + field email + pattern username; label login "Username atau Email"
+- [x] Admin user manager menampilkan kolom email (list & detail)
+
 ## Test Real Potato API — SELESAI (29 Agustus 2026)
 
 - [x] Konfigurasi user: server ID1 (rohserver1.dpdns.org/vps, key valid), package vless 200GB/3IP/30hari Rp7.000

@@ -71,7 +71,7 @@ rohtunnel/
 
 | Tabel | Kolom penting |
 |---|---|
-| `users` | id, username, password_hash, saldo (integer, satuan rupiah), is_admin, created_at |
+| `users` | id, username (a-z0-9 lowercase, 3-20), email (unique), password_hash, saldo (integer, satuan rupiah), is_admin, created_at |
 | `servers` | id, name, endpoint (base url), api_key (token), country (id/sg/us), limit_vpn, note |
 | `packages` | id, server_id, protocol (ssh/vmess/vless/trojan), name, price, kuota_gb, limit_ip, days, active |
 | `vpn_accounts` | id, user_id, server_id, protocol, username, uuid/password, kuota_gb, limit_ip, expired_at, status (active/locked/admin_locked), created_at |
@@ -124,7 +124,7 @@ Flow topup: user pilih nominal → buat QRIS → tampilkan QR (qris_url) → `jo
 
 ### 6.1 Publik
 - **Landing Page**: title, deskripsi singkat bisnis, Login/Register, kelebihan VPN, link "Login as Admin" di bawah.
-- **Register/Login**: user biasa; admin login lewat halaman terpisah (identitas admin dari `settings`/seed).
+- **Register/Login**: user biasa; admin login lewat halaman terpisah (identitas admin dari `settings`/seed). Register wajib email + username + password (username hanya a-z0-9 kecil; email format standar); login menerima username ATAU email.
 
 ### 6.2 Dashboard User
 - **Beli VPN**: pilih server (filter negara id/sg/us) → pilih protocol (ssh/vmess/vless/trojan) → pilih package → isi username (opsional, kosong = random) → isi uuid custom (opsional, v2ray) → checkout (potong saldo, pastikan saldo cukup) → buat akun via VPN API → tampilkan config (ssh account info / vless / vmess / trojan code).

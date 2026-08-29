@@ -12,7 +12,7 @@
       <div class="table-wrap"><table class="table">
         <thead>
           <tr>
-            <th>ID</th><th>Username</th><th>Saldo</th><th>Jumlah Akun</th><th>Terdaftar</th><th>Aksi</th>
+            <th>ID</th><th>Username</th><th>Email</th><th>Saldo</th><th>Jumlah Akun</th><th>Terdaftar</th><th>Aksi</th>
           </tr>
         </thead>
         <tbody>
@@ -20,6 +20,7 @@
             <tr>
               <td><%= u.id %></td>
               <td><strong><%= u.username %></strong></td>
+              <td><%= u.email || '-' %></td>
               <td><%= formatRupiah(u.saldo) %></td>
               <td><%= u.account_count %></td>
               <td><%= new Date(u.created_at + 'Z').toLocaleDateString('id-ID') %></td>

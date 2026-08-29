@@ -3,8 +3,8 @@
     <h1>Masuk</h1>
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
     <form method="post" action="/login">
-      <label>Username
-        <input type="text" name="username" required autofocus>
+      <label>Username atau Email
+        <input type="text" name="username" required autofocus placeholder="username atau email">
       </label>
       <label>Password
         <input type="password" name="password" required>

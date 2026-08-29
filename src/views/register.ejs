@@ -3,8 +3,11 @@
     <h1>Daftar</h1>
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
     <form method="post" action="/register">
+      <label>Email
+        <input type="email" name="email" required autofocus placeholder="nama@email.com">
+      </label>
       <label>Username
-        <input type="text" name="username" required autofocus minlength="3" maxlength="20">
+        <input type="text" name="username" required minlength="3" maxlength="20" pattern="[a-z0-9]+" title="Huruf/angka kecil (a-z, 0-9) saja" autocapitalize="off" autocorrect="off" placeholder="huruf/angka kecil saja">
       </label>
       <label>Password
         <input type="password" name="password" required minlength="6">

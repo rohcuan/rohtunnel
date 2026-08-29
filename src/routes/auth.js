@@ -4,14 +4,19 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const { createSession, destroySession } = require("../middleware/auth");
 
-const USERNAME_RE = /^[a-zA-Z0-9_.-]{3,20}$/;
+const USERNAME_RE = /^[a-z0-9]{3,20}$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 module.exports = (db) => {
   const router = express.Router();
 
+  const findUserByIdentifier = db.prepare(
+    "SELECT * FROM users WHERE username = ? OR email = ?"
+  );
   const findUserByUsername = db.prepare(
     "SELECT * FROM users WHERE username = ?"
   );
+  const findUserByEmail = db.prepare("SELECT * FROM users WHERE email = ?");
 
   const redirectHome = (req, res) =>
     res.redirect(req.user && req.user.is_admin ? "/admin" : "/dashboard");
@@ -22,7 +27,8 @@ module.exports = (db) => {
   });
 
   router.post("/register", (req, res) => {
-    const username = (req.body.username || "").trim();
+    const username = (req.body.username || "").trim().toLowerCase();
+    const email = (req.body.email || "").trim().toLowerCase();
     const password = req.body.password || "";
 
     if (!USERNAME_RE.test(username)) {
@@ -30,7 +36,15 @@ module.exports = (db) => {
         .status(400)
         .render("register", {
           title: "Daftar",
-          error: "Username 3-20 karakter (huruf, angka, . _ -)",
+          error: "Username 3-20 karakter, huruf/angka kecil (a-z, 0-9) saja",
+        });
+    }
+    if (!EMAIL_RE.test(email)) {
+      return res
+        .status(400)
+        .render("register", {
+          title: "Daftar",
+          error: "Format email tidak valid",
         });
     }
     if (password.length < 6) {
@@ -46,11 +60,16 @@ module.exports = (db) => {
         .status(409)
         .render("register", { title: "Daftar", error: "Username sudah dipakai" });
     }
+    if (findUserByEmail.get(email)) {
+      return res
+        .status(409)
+        .render("register", { title: "Daftar", error: "Email sudah terdaftar" });
+    }
 
     const hash = bcrypt.hashSync(password, 10);
     const info = db
-      .prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)")
-      .run(username, hash);
+      .prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)")
+      .run(username, email, hash);
 
     createSession(db, info.lastInsertRowid, res);
     res.redirect("/dashboard");
@@ -62,14 +81,14 @@ module.exports = (db) => {
   });
 
   router.post("/login", (req, res) => {
-    const username = (req.body.username || "").trim();
+    const identifier = (req.body.username || "").trim().toLowerCase();
     const password = req.body.password || "";
 
-    const user = findUserByUsername.get(username);
+    const user = findUserByIdentifier.get(identifier, identifier);
     if (!user || !bcrypt.compareSync(password, user.password_hash)) {
       return res
         .status(401)
-        .render("login", { title: "Masuk", error: "Username atau password salah" });
+        .render("login", { title: "Masuk", error: "Username/email atau password salah" });
     }
     if (user.is_admin) {
       return res
@@ -90,10 +109,10 @@ module.exports = (db) => {
   });
 
   router.post("/login-admin", (req, res) => {
-    const username = (req.body.username || "").trim();
+    const identifier = (req.body.username || "").trim().toLowerCase();
     const password = req.body.password || "";
 
-    const user = findUserByUsername.get(username);
+    const user = findUserByIdentifier.get(identifier, identifier);
     if (!user || !user.is_admin || !bcrypt.compareSync(password, user.password_hash)) {
       return res
         .status(401)
