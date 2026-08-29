@@ -28,6 +28,7 @@ app.use(loadUser(db));
 app.use((req, res, next) => {
   res.locals.user = req.user;
   res.locals.siteName = getSetting("site_name", "RohTunnel");
+  res.locals.hideSaldo = false;
   res.locals.formatRupiah = (n) =>
     "Rp" + Number(n || 0).toLocaleString("id-ID");
   res.locals.statusLabel = (s) =>
