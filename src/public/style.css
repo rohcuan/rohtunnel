@@ -217,7 +217,7 @@ a.card:hover { border-color: var(--primary); text-decoration: none; }
   .card-grid { grid-template-columns: 1fr; }
 }
 
-.page-title { margin-bottom: 20px; }
+.page-title { margin-bottom: 20px; font-size: 20px; font-weight: 700; }
 .page-title h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
 .page-title p { color: var(--muted); font-size: 14px; }
 
@@ -226,8 +226,13 @@ a.card:hover { border-color: var(--primary); text-decoration: none; }
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .header-section h2 { font-size: 18px; }
+.header-section .page-title { margin-bottom: 4px; }
+.header-section .page-title h1 { margin-bottom: 0; }
+.header-section .page-subtitle { margin-bottom: 0; }
 
 .page-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
 .page-subtitle:has(+ .cfg-status) { margin-bottom: 8px; }
@@ -752,6 +757,7 @@ body.login-page {
   .tab { flex: 0 0 auto; }
   .hero-actions { flex-direction: column; }
   .hero-actions .btn { width: 100%; }
+  .page-title { font-size: 18px; }
   .page-title h1 { font-size: 18px; }
   .table-wrap .table { min-width: 480px; }
 }
