@@ -83,11 +83,12 @@ Urutan iterasi (hasil akhir di `2130468`):
 5. Nilai info **font regular** (tanpa `cell-mono`, weight 500, bukan 600)
 6. **Badge hanya kode** (`[SRV-A]`): desktop di kanan label (sebaris), mobile (≤640px) turun ke baris bawah label (label `flex: 1 0 100%`, title pakai row+wrap)
 7. **Negara bukan badge** — badge s.d. hanya `[SRV-A]`; negara dipindah jadi baris info `COUNTRY` (nama lengkap, mis. `Indonesia`, bukan kode `ID`) di box bawah bersama Endpoint/API Key/Limit VPN
+8. **Collapsible (default tertutup)** — collapsed hanya tampil label + badge + chevron; klik toggle (seluruh baris) membuka aksi (Edit · Pricing · Hapus) + box info. Kartu yang sedang diedit otomatis terbuka (`server-list-card-open`, chevron rotate 180°); JS `toggleServerCard()` di servers.ejs
 
-Struktur akhir kartu:
+Struktur kartu (expanded):
 ```
 ┌──────────────────────────────────────────┐
-│ LinkGo Metro Teknologi  [SRV-A]         │  ← mobile: badge [SRV-A] turun ke bawah label
+│ LinkGo Metro Teknologi  [SRV-A]      ▾   │  ← collapsed: hanya baris ini (chevron ▸)
 │          Edit · Pricing · Hapus          │
 │ ┌──────────────────────────────────────┐ │
 │ │ ENDPOINT   https://...               │ │  ← 1 box semua info, font regular
