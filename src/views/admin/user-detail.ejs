@@ -33,7 +33,7 @@
       <% if (transactions.length === 0) { %>
         <p class="muted">Belum ada transaksi.</p>
       <% } else { %>
-        <table class="table table-compact">
+        <div class="table-wrap"><table class="table table-compact">
           <thead><tr><th>Jenis</th><th>Jumlah</th><th>Detail</th><th>Waktu</th></tr></thead>
           <tbody>
             <% transactions.forEach(t => { %>
@@ -45,7 +45,7 @@
               </tr>
             <% }) %>
           </tbody>
-        </table>
+        </table></div>
       <% } %>
     </div>
   </div>
@@ -62,28 +62,9 @@
     <% if (accounts.length === 0) { %>
       <p class="muted">Tidak ada akun.</p>
     <% } else { %>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Username</th><th>Proto</th><th>Server</th><th>Status</th>
-            <th>Kuota</th><th>IP</th><th>Expired</th><th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% accounts.forEach(a => { %>
-            <tr>
-              <td class="cell-mono"><%= a.username %></td>
-              <td><span class="badge badge-country"><%= a.protocol.toUpperCase() %></span></td>
-              <td><%= a.server_name %> <span class="badge badge-country"><%= a.server_country.toUpperCase() %></span></td>
-              <td><span class="badge badge-<%= a.status %>"><%= statusLabel(a.status) %></span></td>
-              <td><%= a.kuota_gb %> GB</td>
-              <td><%= a.limit_ip %></td>
-              <td><%= new Date(a.expired_at).toLocaleDateString('id-ID') %></td>
-              <td><%- include('partials/akun-actions', { a, back: '/admin/users/' + target.id + '?protocol=' + protocol }) %></td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <% accounts.forEach(a => { %>
+        <%- include('partials/akun-card', { a, back: '/admin/users/' + target.id + '?protocol=' + protocol }) %>
+      <% }) %>
     <% } %>
   </div>
 <%- include('../partials/footer') %>

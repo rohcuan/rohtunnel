@@ -221,6 +221,64 @@ main { flex: 1; padding: 32px 0 48px; }
 
 .form-hint { margin-top: -8px; }
 
+/* ============ Kartu akun (manager admin) ============ */
+.section-title { margin: 18px 0 12px; font-size: 1.05rem; }
+
+.account-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.meta-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 0;
+}
+.meta-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.meta-value {
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.act-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+.act-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.act-form .input-sm { width: 70px; }
+
+.filter-actions { display: flex; gap: 8px; }
+
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-wrap .table { min-width: 560px; }
+
 .topup-form { display: flex; gap: 10px; flex-wrap: wrap; }
 .topup-form input { flex: 1; min-width: 180px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; }
 .topup-actions { display: flex; gap: 12px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
@@ -257,4 +315,47 @@ main { flex: 1; padding: 32px 0 48px; }
   text-align: center;
   color: var(--muted);
   font-size: 0.85rem;
+}
+/* ============ Responsive / Mobile friendly ============ */
+@media (max-width: 768px) {
+  .header-inner { flex-wrap: wrap; gap: 8px; }
+  .hero h1 { font-size: 1.7rem; }
+  .hero p { font-size: 1rem; }
+  .row { flex-direction: column; }
+  .row label { min-width: 100%; }
+  .form-actions { flex-direction: column; }
+  .form-actions .btn { width: 100%; }
+  .filter-form { flex-direction: column; }
+  .filter-form input[type="text"],
+  .filter-form select { width: 100%; }
+  .filter-actions { flex-direction: row; }
+  .filter-actions .btn { flex: 1; }
+  .topup-form { flex-direction: column; }
+  .topup-form input { width: 100%; }
+  .saldo-adjust .adjust-form { flex-wrap: wrap; }
+  .adjust-form input { min-width: 100%; }
+  .auth-card { margin: 16px auto; padding: 20px; }
+  .kv-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .kv-label { flex: none; }
+  .kv-value { width: 100%; }
+  .kv-row .copy-btn { align-self: flex-end; }
+  .qr-frame { height: 480px; }
+  .cell-actions { flex-wrap: wrap; }
+  .account-head { flex-direction: column; gap: 10px; }
+  .account-actions { flex-direction: column; align-items: stretch; }
+  .account-actions .inline-form,
+  .account-actions .act-form { width: 100%; }
+  .account-actions .btn { flex: 1; }
+}
+
+@media (max-width: 640px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .account-meta-grid { grid-template-columns: 1fr; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab { flex: 0 0 auto; }
+  .site-footer { font-size: 0.8rem; }
+  .hero-actions { flex-direction: column; }
+  .hero-actions .btn { width: 100%; }
+  .page-title h1 { font-size: 1.35rem; }
+  .table-wrap .table { min-width: 480px; }
 }

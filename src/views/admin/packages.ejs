@@ -49,7 +49,7 @@
     <% if (packages.length === 0) { %>
       <p class="muted">Belum ada package untuk protocol ini.</p>
     <% } else { %>
-      <table class="table">
+      <div class="table-wrap"><table class="table">
         <thead>
           <tr>
             <th>Nama</th><th>Harga</th><th>Kuota</th><th>Limit IP</th><th>Durasi</th><th>Aksi</th>
@@ -72,7 +72,7 @@
             </tr>
           <% }) %>
         </tbody>
-      </table>
+      </table></div>
     <% } %>
   </div>
 <%- include('../partials/footer') %>

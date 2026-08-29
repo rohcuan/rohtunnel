@@ -44,7 +44,7 @@
     <% if (servers.length === 0) { %>
       <p class="muted">Belum ada server. Tambahkan server pertama di atas.</p>
     <% } else { %>
-      <table class="table">
+      <div class="table-wrap"><table class="table">
         <thead>
           <tr>
             <th>Nama</th><th>Country</th><th>Endpoint</th><th>API Key</th>
@@ -69,7 +69,7 @@
             </tr>
           <% }) %>
         </tbody>
-      </table>
+      </table></div>
     <% } %>
   </div>
 <%- include('../partials/footer') %>

@@ -21,7 +21,7 @@
     <% if (riwayat.length === 0) { %>
       <p class="muted">Belum ada topup.</p>
     <% } else { %>
-      <table class="table">
+      <div class="table-wrap"><table class="table">
         <thead>
           <tr><th>ID</th><th>Nominal</th><th>Status</th><th>Waktu</th></tr>
         </thead>
@@ -35,7 +35,7 @@
             </tr>
           <% }) %>
         </tbody>
-      </table>
+      </table></div>
     <% } %>
   </div>
 <%- include('partials/footer') %>

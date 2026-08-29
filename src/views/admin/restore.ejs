@@ -27,14 +27,14 @@
     <% if (backups.length === 0) { %>
       <p class="muted">Tidak ada file backup di <code>data/backup/</code>.</p>
     <% } else { %>
-      <table class="table">
+      <div class="table-wrap"><table class="table">
         <thead><tr><th>Nama</th><th>Ukuran</th></tr></thead>
         <tbody>
           <% backups.slice(0, 15).forEach(b => { %>
             <tr><td class="cell-mono"><%= b.name %></td><td><%= (b.size / 1024).toFixed(1) %> KB</td></tr>
           <% }) %>
         </tbody>
-      </table>
+      </table></div>
       <p class="muted">Unduh dari Telegram bila perlu; upload di form atas untuk restore.</p>
     <% } %>
   </div>

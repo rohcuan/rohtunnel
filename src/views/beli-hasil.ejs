@@ -9,14 +9,14 @@
 
   <div class="panel panel-success">
     <h3>Detail Akun</h3>
-    <table class="table">
+    <div class="table-wrap"><table class="table">
       <tbody>
         <tr><td class="kv-label">Username</td><td class="cell-mono"><%= account.username %></td></tr>
         <tr><td class="kv-label">Kuota</td><td><%= account.kuota_gb %> GB</td></tr>
         <tr><td class="kv-label">Limit IP</td><td><%= account.limit_ip %></td></tr>
         <tr><td class="kv-label">Expired</td><td><%= new Date(account.expired_at).toLocaleDateString('id-ID') %></td></tr>
       </tbody>
-    </table>
+    </table></div>
   </div>
 
   <div class="card">

@@ -1,0 +1,30 @@
+<div class="card account-card">
+  <div class="account-head">
+    <div>
+      <h3><%= a.username %>
+        <span class="badge badge-country"><%= a.protocol.toUpperCase() %></span>
+        <span class="badge badge-<%= a.status %>"><%= statusLabel(a.status) %></span>
+      </h3>
+      <p class="muted">
+        Server: <strong><%= a.server_name %></strong>
+        <span class="badge badge-country"><%= a.server_country.toUpperCase() %></span>
+        &middot; Pemilik: <a href="/admin/users/<%= a.user_id %>"><%= a.owner_name %></a>
+      </p>
+    </div>
+  </div>
+  <div class="account-meta-grid">
+    <div class="meta-tile">
+      <span class="meta-label">Kuota</span>
+      <span class="meta-value"><%= a.kuota_gb %> GB</span>
+    </div>
+    <div class="meta-tile">
+      <span class="meta-label">Limit IP</span>
+      <span class="meta-value"><%= a.limit_ip %></span>
+    </div>
+    <div class="meta-tile">
+      <span class="meta-label">Expired</span>
+      <span class="meta-value"><%= new Date(a.expired_at).toLocaleDateString('id-ID') %></span>
+    </div>
+  </div>
+  <%- include('akun-actions', { a, back }) %>
+</div>

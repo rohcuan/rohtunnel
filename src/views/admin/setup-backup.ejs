@@ -54,7 +54,7 @@
     <% if (backups.length === 0) { %>
       <p class="muted">Belum ada file backup.</p>
     <% } else { %>
-      <table class="table">
+      <div class="table-wrap"><table class="table">
         <thead><tr><th>Nama</th><th>Ukuran</th><th>Waktu</th></tr></thead>
         <tbody>
           <% backups.slice(0, 15).forEach(b => { %>
@@ -65,7 +65,7 @@
             </tr>
           <% }) %>
         </tbody>
-      </table>
+      </table></div>
     <% } %>
   </div>
 <%- include('../partials/footer') %>

@@ -1,9 +1,9 @@
 <% const escA = (s) => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); %>
-<div class="cell-actions">
+<div class="account-actions">
   <% if (a.status === 'admin_locked') { %>
     <form method="post" action="/admin/akun/<%= a.id %>/unlock" class="inline-form">
       <input type="hidden" name="back" value="<%= escA(back) %>">
-      <button type="submit" class="btn btn-outline btn-sm" title="Buka kunci (admin)">Buka</button>
+      <button type="submit" class="btn btn-outline btn-sm" title="Buka kunci (admin)">Buka Kunci</button>
     </form>
   <% } else { %>
     <form method="post" action="/admin/akun/<%= a.id %>/lock" class="inline-form">
@@ -11,17 +11,21 @@
       <button type="submit" class="btn btn-outline btn-sm">Kunci</button>
     </form>
   <% } %>
-  <form method="post" action="/admin/akun/<%= a.id %>/bandwidth" class="inline-form">
+  <form method="post" action="/admin/akun/<%= a.id %>/bandwidth" class="act-form">
     <input type="hidden" name="back" value="<%= escA(back) %>">
-    <input type="number" name="kuota" value="<%= a.kuota_gb %>" min="1" max="10000"
-           class="input-sm" title="Kuota GB" style="width:64px">
-    <label class="checkbox-inline" title="Reset pemakaian bandwidth"><input type="checkbox" name="reset_bw" value="1"> reset</label>
+    <label class="act-label">Kuota GB
+      <input type="number" name="kuota" value="<%= a.kuota_gb %>" min="1" max="10000" class="input-sm">
+    </label>
+    <label class="checkbox-inline" title="Reset pemakaian bandwidth">
+      <input type="checkbox" name="reset_bw" value="1"> reset
+    </label>
     <button type="submit" class="btn btn-outline btn-sm">Set BW</button>
   </form>
-  <form method="post" action="/admin/akun/<%= a.id %>/ip" class="inline-form">
+  <form method="post" action="/admin/akun/<%= a.id %>/ip" class="act-form">
     <input type="hidden" name="back" value="<%= escA(back) %>">
-    <input type="number" name="limitip" value="<%= a.limit_ip %>" min="1" max="100"
-           class="input-sm" title="Limit IP" style="width:60px">
+    <label class="act-label">Limit IP
+      <input type="number" name="limitip" value="<%= a.limit_ip %>" min="1" max="100" class="input-sm">
+    </label>
     <button type="submit" class="btn btn-outline btn-sm">Set IP</button>
   </form>
   <form method="post" action="/admin/akun/<%= a.id %>/delete" class="inline-form"

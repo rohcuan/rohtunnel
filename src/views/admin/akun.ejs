@@ -28,39 +28,22 @@
           <option value="<%= st %>" <%= filters.status === st ? 'selected' : '' %>><%= statusLabel(st) %></option>
         <% }) %>
       </select>
-      <button type="submit" class="btn btn-primary btn-sm">Cari</button>
-      <a href="/admin/akun" class="btn btn-outline btn-sm">Reset</a>
+      <div class="filter-actions">
+        <button type="submit" class="btn btn-primary btn-sm">Cari</button>
+        <a href="/admin/akun" class="btn btn-outline btn-sm">Reset</a>
+      </div>
     </form>
   </div>
 
-  <div class="card">
-    <h3>Hasil (<%= accounts.length %>)</h3>
-    <% if (accounts.length === 0) { %>
+  <h3 class="section-title">Hasil (<%= accounts.length %>)</h3>
+  <% if (accounts.length === 0) { %>
+    <div class="card">
       <p class="muted">Tidak ada akun ditemukan.</p>
-    <% } else { %>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Username</th><th>Proto</th><th>Server</th><th>Pemilik</th><th>Status</th>
-            <th>Kuota</th><th>IP</th><th>Expired</th><th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% accounts.forEach(a => { %>
-            <tr>
-              <td class="cell-mono"><%= a.username %></td>
-              <td><span class="badge badge-country"><%= a.protocol.toUpperCase() %></span></td>
-              <td><%= a.server_name %> <span class="badge badge-country"><%= a.server_country.toUpperCase() %></span></td>
-              <td><a href="/admin/users/<%= a.user_id %>"><%= a.owner_name %></a></td>
-              <td><span class="badge badge-<%= a.status %>"><%= statusLabel(a.status) %></span></td>
-              <td><%= a.kuota_gb %> GB</td>
-              <td><%= a.limit_ip %></td>
-              <td><%= new Date(a.expired_at).toLocaleDateString('id-ID') %></td>
-              <td><%- include('partials/akun-actions', { a, back: '/admin/akun?' + (filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '') + (filters.protocol ? 'protocol=' + filters.protocol + '&' : '') + (filters.serverId ? 'server_id=' + filters.serverId + '&' : '') + (filters.status ? 'status=' + filters.status + '&' : '') }) %></td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    <% } %>
-  </div>
+    </div>
+  <% } else { %>
+    <% const backUrl = '/admin/akun?' + (filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '') + (filters.protocol ? 'protocol=' + filters.protocol + '&' : '') + (filters.serverId ? 'server_id=' + filters.serverId + '&' : '') + (filters.status ? 'status=' + filters.status + '&' : ''); %>
+    <% accounts.forEach(a => { %>
+      <%- include('partials/akun-card', { a, back: backUrl }) %>
+    <% }) %>
+  <% } %>
 <%- include('../partials/footer') %>
