@@ -27,6 +27,10 @@ fetch() {
 
 mkdir -p "$APP_DIR" "$DATA_DIR"
 
+# DB & backup WAJIB di DATA_DIR (volume), bukan di dalam source app
+export DB_PATH="$DATA_DIR/rohtunnel.db"
+export BACKUP_DIR="$DATA_DIR/backup"
+
 need_download=false
 if [ ! -f "$APP_DIR/package.json" ]; then
   need_download=true

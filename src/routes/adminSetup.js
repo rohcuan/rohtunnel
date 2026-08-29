@@ -6,10 +6,11 @@ const express = require("express");
 const multer = require("multer");
 const { requireAdmin } = require("../middleware/admin");
 const { getSetting, setSetting } = require("../config");
+const { DB_PATH } = require("../db");
 const telegram = require("../services/telegram");
 const backup = require("../services/backup");
 
-const DATA_DIR = path.join(__dirname, "..", "..", "data");
+const DATA_DIR = path.dirname(DB_PATH);
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 100 * 1024 * 1024 },
