@@ -7,6 +7,7 @@
 - [x] Login (user & admin) menerima username ATAU email + password (`WHERE username = ? OR email = ?`)
 - [x] View: form register + field email + pattern username; label login "Username atau Email"
 - [x] Admin user manager menampilkan kolom email (list & detail)
+- [x] Container test `rohtunnel-dev` diperbarui: commit ac271c4 di-push ke GitHub, source dihapus di container + restart (entrypoint unduh ulang + npm install), migrasi 008 diterapkan ke DB container (user lama tetap, email NULL), register/login by username/email/validasi terverifikasi via `podman exec`
 
 ## Test Real Potato API — SELESAI (29 Agustus 2026)
 
