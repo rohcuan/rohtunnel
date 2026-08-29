@@ -12,7 +12,9 @@
       <a href="/" class="brand"><%= siteName %></a>
       <nav class="nav">
         <% if (user) { %>
-          <span class="nav-saldo">Saldo: Rp<%= Number(user.saldo).toLocaleString('id-ID') %></span>
+          <% if (!hideSaldo) { %>
+            <span class="nav-saldo">Saldo: <%= formatRupiah(user.saldo) %></span>
+          <% } %>
           <% if (user.is_admin) { %>
             <a href="/admin">Admin</a>
           <% } else { %>

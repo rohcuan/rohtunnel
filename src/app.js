@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("landing", { title: "Beranda" });
+  res.render("landing", { title: "Beranda", hideSaldo: true });
 });
 
 app.use("/", require("./routes/auth")(db));
