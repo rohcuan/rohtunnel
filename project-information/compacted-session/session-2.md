@@ -81,17 +81,19 @@ Urutan iterasi (hasil akhir di `2130468`):
 3. Urutan header **label → kode → negara** (bukan kode dulu)
 4. Info tanpa box per baris → **1 box untuk semua info** (bg `#f8fafc` + border + radius di `.server-card-body`), tanpa garis pemisah antar baris
 5. Nilai info **font regular** (tanpa `cell-mono`, weight 500, bukan 600)
-6. **Badge kode+negara**: desktop di kanan label (sebaris), mobile (≤640px) turun ke baris bawah label — [SRV-A] & [ID] tetap sejajar (label `flex: 1 0 100%`, title pakai row+wrap)
+6. **Badge hanya kode** (`[SRV-A]`): desktop di kanan label (sebaris), mobile (≤640px) turun ke baris bawah label (label `flex: 1 0 100%`, title pakai row+wrap)
+7. **Negara bukan badge** — badge s.d. hanya `[SRV-A]`; negara dipindah jadi baris info `COUNTRY` (nama lengkap, mis. `Indonesia`, bukan kode `ID`) di box bawah bersama Endpoint/API Key/Limit VPN
 
 Struktur akhir kartu:
 ```
 ┌──────────────────────────────────────────┐
-│ LinkGo Metro Teknologi  [SRV-A] [ID]     │  ← mobile: badge [SRV-A] & [ID] turun sejajar ke bawah label
+│ LinkGo Metro Teknologi  [SRV-A]         │  ← mobile: badge [SRV-A] turun ke bawah label
 │          Edit · Pricing · Hapus          │
 │ ┌──────────────────────────────────────┐ │
 │ │ ENDPOINT   https://...               │ │  ← 1 box semua info, font regular
 │ │ API KEY    abc123...                 │ │
 │ │ LIMIT VPN  Tak terbatas              │ │
+│ │ COUNTRY    Indonesia                 │ │
 │ └──────────────────────────────────────┘ │
 └──────────────────────────────────────────┘
 ```
