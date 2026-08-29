@@ -10,7 +10,7 @@
   <% if (!bodyClass) { %>
   <header class="navbar">
     <div class="navbar-inner">
-      <a href="/" class="navbar-brand"><%= siteName %></a>
+      <a href="<%= user ? (user.is_admin ? '/admin' : '/dashboard') : '/' %>" class="navbar-brand"><%= siteName %></a>
       <div class="navbar-nav">
         <% if (user) { %>
           <div class="user-dropdown">
@@ -46,24 +46,11 @@
                 </div>
               </div>
               <div class="dropdown-body">
-                <% if (user.is_admin) { %>
-                  <a class="dropdown-item" href="/admin">Admin Dashboard</a>
-                  <a class="dropdown-item" href="/admin/servers">Manage Server</a>
-                  <a class="dropdown-item" href="/admin/users">User Manager</a>
-                  <a class="dropdown-item" href="/admin/akun">Manager Akun VPN</a>
-                  <a class="dropdown-item" href="/admin/setup">Setup</a>
-                  <a class="dropdown-item" href="/admin/restore">Restore Backup</a>
-                <% } else { %>
+                <% if (!user.is_admin) { %>
                   <div class="dropdown-row">
                     <span class="dropdown-label">Saldo Panel</span>
                     <span class="dropdown-value"><%= formatRupiah(user.saldo) %></span>
                   </div>
-                  <a class="dropdown-item" href="/dashboard">Dashboard</a>
-                  <a class="dropdown-item" href="/beli">Beli VPN</a>
-                  <a class="dropdown-item" href="/akun">Akun VPN Saya</a>
-                  <a class="dropdown-item" href="/recovery">Recovery Akun</a>
-                  <a class="dropdown-item" href="/topup">Topup Saldo</a>
-                  <a class="dropdown-item" href="<%= contactAdmin %>" target="_blank" rel="noopener">Hubungi Admin</a>
                 <% } %>
               </div>
               <div class="dropdown-footer">
