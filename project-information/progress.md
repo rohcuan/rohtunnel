@@ -1,5 +1,15 @@
 # Progress
 
+## UI Styling RohTembak-XL — SELESAI (29 Agustus 2026)
+
+- [x] Referensi desain dibaca dari repo privat `rohcuan/rohtembak-xl` (read-only via gh): palet indigo `#4361ee` → purple `#7209b7`, bg `#f0f2f5`, kartu putih radius 12 + shadow halus, tombol/input radius 8 + focus ring `0 0 0 3px rgba(67,97,238,0.1)`, tabel header uppercase, dropdown menu navbar
+- [x] `style.css` ditulis ulang mengikuti design XL (class RohTunnel dipertahankan + komponen baru: login-page/login-card, banner, dropdown, pw-toggle, search-field, error-msg, btn-success/warning/pink)
+- [x] Navbar → dropdown "Menu" (Info Profil: role/username/email via submenu, saldo, link menu user/admin, Logout merah) — `loadUser` kini menyertakan email
+- [x] Halaman login/login-admin/register jadi standalone: background gradien + kartu putih tengah + toggle lihat password (mengikuti XL login)
+- [x] Landing hero jadi banner gradien; dashboard user & admin dapat banner statistik (saldo/akun, user/server/akun) + menu grid 2 kolom
+- [x] Search admin akun pakai ikon kaca pembesar; local `contactAdmin` (dari settings) dipakai di dropdown & dashboard
+- [x] Verifikasi lokal + container test `rohtunnel-dev` (commit 6b5314c): semua halaman 200, elemen XL ter-render, CSS indigo terkirim
+
 ## Auth: Email + Username lowercase — SELESAI (29 Agustus 2026)
 
 - [x] Migrasi `008_user_email.sql`: kolom `email` di `users` (nullable, UNIQUE index — user lama/admin tanpa email tetap valid)
