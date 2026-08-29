@@ -1,8 +1,12 @@
 <%- include('../partials/head') %>
+  <div class="header-section">
+    <div>
+      <div class="page-title">Dashboard Admin</div>
+      <div class="page-subtitle">Atur semuanya disini</div>
+    </div>
+  </div>
+
   <div class="banner">
-    <h2>Admin Dashboard</h2>
-    <p class="banner-sub">Halo, <strong><%= user.username %></strong>!</p>
-    <div class="banner-isep"></div>
     <div class="banner-grid">
       <div class="banner-item">
         <div class="label">Total User</div>
@@ -18,26 +22,21 @@
       </div>
     </div>
   </div>
-  <div class="card-grid">
-    <a href="/admin/servers" class="card">
-      <h3>Manage Server</h3>
-      <p>Tambahkan server VPN &amp; atur pricing package.</p>
-    </a>
-    <a href="/admin/users" class="card">
-      <h3>User Manager</h3>
-      <p>Atur saldo &amp; kelola akun VPN user.</p>
-    </a>
-    <a href="/admin/akun" class="card">
-      <h3>Manager Akun VPN</h3>
-      <p>Semua akun VPN dari semua server.</p>
-    </a>
-    <a href="/admin/setup" class="card">
-      <h3>Setup</h3>
-      <p>QRIS API, Telegram Bot, Autobackup, Template Config.</p>
-    </a>
-    <a href="/admin/restore" class="card">
-      <h3>Restore Backup</h3>
-      <p>Pulihkan database dari backup.</p>
-    </a>
+
+  <div class="card">
+    <div class="header-section">
+      <h2>Menu</h2>
+    </div>
+    <div class="menu-grid">
+      <a href="/admin/users" class="btn btn-outline">Kelola User</a>
+      <a href="/admin/servers" class="btn btn-outline">Manage Server</a>
+      <a href="/admin/akun" class="btn btn-outline">Manager Akun VPN</a>
+      <a href="/admin/setup-qris" class="btn btn-outline">Atur QRIS API</a>
+      <a href="/admin/setup-telegram" class="btn btn-outline">Atur Bot Telegram</a>
+      <a href="/admin/setup-notif" class="btn btn-outline">Atur Notif Bot Telegram</a>
+      <a href="/admin/setup-backup" class="btn btn-outline">Atur Auto Backup</a>
+      <a href="/admin/setup-templates" class="btn btn-outline">Template Config</a>
+      <a href="/admin/restore" class="btn btn-outline">Restore Backup</a>
+    </div>
   </div>
 <%- include('../partials/footer') %>
