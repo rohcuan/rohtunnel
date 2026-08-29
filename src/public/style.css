@@ -611,6 +611,10 @@ body.login-page {
   display: flex;
   flex-direction: column;
   margin-top: 14px;
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 4px 12px;
 }
 .server-card-info {
   display: flex;
@@ -618,9 +622,7 @@ body.login-page {
   gap: 12px;
   padding: 8px 0;
   min-width: 0;
-  border-bottom: 1px solid var(--border-light);
 }
-.server-card-info:last-child { border-bottom: none; }
 .server-card-info-label {
   flex: 0 0 130px;
   font-size: 12px;
@@ -632,7 +634,7 @@ body.login-page {
 .server-card-info-value {
   flex: 1;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
   word-break: break-all;
 }
