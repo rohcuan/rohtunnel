@@ -58,7 +58,6 @@
             <div class="server-card-title">
               <strong class="server-card-label"><%= s.label %></strong>
               <span class="badge badge-country"><%= s.code %></span>
-              <span class="badge badge-country"><%= s.country.toUpperCase() %></span>
             </div>
             <div class="server-card-actions">
               <a href="/admin/servers?edit=<%= s.id %>" class="btn btn-outline btn-sm">Edit</a>
@@ -81,6 +80,10 @@
             <div class="server-card-info">
               <span class="server-card-info-label">Limit VPN</span>
               <span class="server-card-info-value"><%= s.limit_vpn === 0 ? 'Tak terbatas' : s.limit_vpn %></span>
+            </div>
+            <div class="server-card-info">
+              <span class="server-card-info-label">Country</span>
+              <span class="server-card-info-value"><%= ({id:'Indonesia', sg:'Singapore', us:'USA'})[s.country] || s.country %></span>
             </div>
           </div>
         </div>
