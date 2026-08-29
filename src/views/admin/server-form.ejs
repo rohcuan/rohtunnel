@@ -1,0 +1,44 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1><%= server ? 'Edit Server: ' + server.code + ' · ' + server.label : 'Tambah Server' %></h1>
+    <p>Konfigurasi server VPN (endpoint Potato API + API key).</p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="card">
+    <form method="post" action="<%= server ? '/admin/servers/' + server.id + '/edit' : '/admin/servers/add' %>">
+      <label>Kode Server
+        <input type="text" name="code" placeholder="Contoh: SRV-A" required maxlength="20" pattern="[A-Za-z0-9-]+" title="Huruf besar, angka, atau -" style="text-transform:uppercase" value="<%= values.code %>">
+      </label>
+      <label>Label
+        <input type="text" name="label" placeholder="Contoh: LinkGo Metro Teknologi" required maxlength="100" value="<%= values.label %>">
+      </label>
+      <label>Endpoint API
+        <input type="url" name="endpoint" placeholder="https://rohserver1.dpdns.org" required value="<%= values.endpoint %>">
+      </label>
+      <p class="muted form-hint">Tanpa /vps — path /vps otomatis ditambahkan aplikasi.</p>
+      <label>API Key
+        <input type="password" name="api_key" placeholder="Bearer token" required value="<%= values.api_key %>">
+      </label>
+      <label>Country
+        <select name="country">
+          <option value="id" <%= values.country === 'id' ? 'selected' : '' %>>Indonesia</option>
+          <option value="sg" <%= values.country === 'sg' ? 'selected' : '' %>>Singapore</option>
+          <option value="us" <%= values.country === 'us' ? 'selected' : '' %>>USA</option>
+        </select>
+      </label>
+      <label>Limit Jumlah VPN (0 = tanpa batas)
+        <input type="number" name="limit_vpn" min="0" value="<%= values.limit_vpn %>" required>
+      </label>
+      <div class="form-actions">
+        <% if (server) { %>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+          <a href="/admin/servers" class="btn btn-outline">Batal</a>
+        <% } else { %>
+          <button type="submit" class="btn btn-primary">Simpan Server</button>
+        <% } %>
+      </div>
+    </form>
+  </div>
+<%- include('../partials/footer') %>

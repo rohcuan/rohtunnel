@@ -50,39 +50,50 @@ module.exports = (db) => {
     return { data };
   };
 
-  const serverForm = (res, req, servers, editing, error) => {
-    const formData = (editing && editing.formData) || {};
+  const serverForm = (res, req, server, formData, error) => {
     const values = {
-      code: formData.code !== undefined ? formData.code : (editing ? editing.code : ""),
-      label: formData.label !== undefined ? formData.label : (editing ? editing.label : ""),
-      endpoint: formData.endpoint !== undefined ? formData.endpoint : (editing ? editing.endpoint : ""),
-      api_key: formData.api_key !== undefined ? formData.api_key : (editing ? editing.api_key : ""),
-      country: formData.country !== undefined ? formData.country : (editing ? editing.country : "id"),
-      limit_vpn: formData.limit_vpn !== undefined ? formData.limit_vpn : (editing ? editing.limit_vpn : "0"),
+      code: formData && formData.code !== undefined ? formData.code : (server ? server.code : ""),
+      label: formData && formData.label !== undefined ? formData.label : (server ? server.label : ""),
+      endpoint: formData && formData.endpoint !== undefined ? formData.endpoint : (server ? server.endpoint : ""),
+      api_key: formData && formData.api_key !== undefined ? formData.api_key : (server ? server.api_key : ""),
+      country: formData && formData.country !== undefined ? formData.country : (server ? server.country : "id"),
+      limit_vpn: formData && formData.limit_vpn !== undefined ? formData.limit_vpn : (server ? server.limit_vpn : "0"),
     };
-    res.status(error ? 400 : 200).render("admin/servers", {
-      title: "Manage Server",
+    res.status(error ? 400 : 200).render("admin/server-form", {
+      title: server ? "Edit Server" : "Tambah Server",
       user: req.user,
-      servers,
-      editing: editing ? editing : null,
+      server,
       values,
       error,
     });
   };
 
   router.get("/admin/servers", requireAdmin, (req, res) => {
-    const editId = parseInt(req.query.edit, 10);
-    const editing = Number.isInteger(editId) ? getServer.get(editId) : null;
-    serverForm(res, req, listServers.all(), editing, null);
+    res.render("admin/servers", {
+      title: "Manage Server",
+      user: req.user,
+      servers: listServers.all(),
+      error: null,
+    });
+  });
+
+  router.get("/admin/servers/new", requireAdmin, (req, res) => {
+    serverForm(res, req, null, null, null);
+  });
+
+  router.get("/admin/servers/:id/edit", requireAdmin, (req, res) => {
+    const server = getServer.get(req.params.id);
+    if (!server) return res.status(404).render("404", { title: "Tidak ditemukan" });
+    serverForm(res, req, server, null, null);
   });
 
   router.post("/admin/servers/add", requireAdmin, (req, res) => {
     const { error, data } = validateServer(req.body);
     if (error) {
-      return serverForm(res, req, listServers.all(), { formData: req.body }, error);
+      return serverForm(res, req, null, req.body, error);
     }
     if (getServerByCode.get(data.code)) {
-      return serverForm(res, req, listServers.all(), { formData: req.body }, `Kode server ${data.code} sudah dipakai`);
+      return serverForm(res, req, null, req.body, `Kode server ${data.code} sudah dipakai`);
     }
 
     db.prepare(
@@ -98,11 +109,11 @@ module.exports = (db) => {
 
     const { error, data } = validateServer(req.body);
     if (error) {
-      return serverForm(res, req, listServers.all(), { id: server.id, formData: req.body }, error);
+      return serverForm(res, req, server, req.body, error);
     }
     const dup = getServerByCode.get(data.code);
     if (dup && dup.id !== server.id) {
-      return serverForm(res, req, listServers.all(), { id: server.id, formData: req.body }, `Kode server ${data.code} sudah dipakai`);
+      return serverForm(res, req, server, req.body, `Kode server ${data.code} sudah dipakai`);
     }
 
     db.prepare(
