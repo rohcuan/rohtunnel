@@ -195,9 +195,9 @@ main { flex: 1; padding: 24px 0 40px; }
 a.card:hover { border-color: var(--primary); text-decoration: none; }
 .card h3 { font-size: 16px; margin-bottom: 8px; }
 .card p { color: var(--muted); font-size: 13px; }
-.card form { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
-.card form label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: 14px; }
-.card form input, .card form select {
+.card > form { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+.card > form label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: 14px; }
+.card > form input, .card > form select {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid var(--border);
@@ -592,6 +592,50 @@ body.login-page {
 
 .checkout-section { margin-top: 16px; }
 .checkout-section.hidden { display: none; }
+
+/* ============ List server (kartu panjang) ============ */
+.server-list-card { border: 1px solid var(--border-light); }
+.server-list-card-edit { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67,97,238,0.1); }
+.server-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.server-card-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.server-card-label { font-size: 16px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.server-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.server-card-actions .inline-form { display: inline-flex; }
+.server-card-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.server-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 0;
+}
+.server-card-info-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.server-card-info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-all;
+}
 
 /* ============ Footer ============ */
 .site-footer {

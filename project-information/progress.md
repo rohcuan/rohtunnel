@@ -1,5 +1,12 @@
 # Progress
 
+## Admin: List Server jadi Kartu Panjang — SELESAI (29 Agustus 2026)
+
+- [x] Tabel list server diganti **kartu panjang** per server: header (badge kode + label + badge country + tombol Edit/Pricing/Hapus), body grid tile info (Endpoint, API Key, Limit VPN) — `auto-fit minmax(200px,1fr)` → 2-3 kolom desktop, 1 kolom mobile
+- [x] Kartu yang sedang diedit di-highlight (`server-list-card-edit`, border indigo + ring)
+- [x] Fix CSS: `.card form` di-scope jadi `.card > form` agar form hapus bersarang di dalam kartu tidak kena layout kolom
+- [x] Verifikasi lokal: kartu render (2 server), highlight edit, form tambah normal, halaman admin lain 200
+
 ## Admin: Edit Server — SELESAI (29 Agustus 2026)
 
 - [x] Tombol **Edit** di list server → `/admin/servers?edit=<id>`: form sama berubah jadi mode edit (judul "Edit Server", aksi `/admin/servers/:id/edit`, tombol Simpan Perubahan + Batal), semua field terisi (code, label, endpoint, api_key, country, limit_vpn)

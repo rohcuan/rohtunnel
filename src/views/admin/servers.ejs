@@ -52,34 +52,39 @@
     <% if (servers.length === 0) { %>
       <p class="muted">Belum ada server. Tambahkan server pertama di atas.</p>
     <% } else { %>
-      <div class="table-wrap"><table class="table">
-        <thead>
-          <tr>
-            <th>Kode</th><th>Label</th><th>Country</th><th>Endpoint</th><th>API Key</th>
-            <th>Limit VPN</th><th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% servers.forEach(s => { %>
-            <tr>
-              <td><span class="badge badge-country"><%= s.code %></span></td>
-              <td><strong><%= s.label %></strong></td>
-              <td><span class="badge badge-country"><%= s.country.toUpperCase() %></span></td>
-              <td class="cell-mono"><%= s.endpoint %></td>
-              <td class="cell-mono"><%= s.api_key.slice(0, 6) %>...</td>
-              <td><%= s.limit_vpn === 0 ? 'Tak terbatas' : s.limit_vpn %></td>
-              <td class="cell-actions">
-                <a href="/admin/servers?edit=<%= s.id %>" class="btn btn-outline btn-sm">Edit</a>
-                <a href="/admin/servers/<%= s.id %>/packages" class="btn btn-outline btn-sm">Pricing</a>
-                <form method="post" action="/admin/servers/<%= s.id %>/delete" class="inline-form"
-                      onsubmit="return confirm('Hapus server <%= s.code %> — <%= s.label %> beserta semua package-nya?');">
-                  <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                </form>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table></div>
+      <% servers.forEach(s => { %>
+        <div class="card server-list-card <%= editing && editing.id == s.id ? 'server-list-card-edit' : '' %>">
+          <div class="server-card-head">
+            <div class="server-card-title">
+              <span class="badge badge-country"><%= s.code %></span>
+              <strong class="server-card-label"><%= s.label %></strong>
+              <span class="badge badge-country"><%= s.country.toUpperCase() %></span>
+            </div>
+            <div class="server-card-actions">
+              <a href="/admin/servers?edit=<%= s.id %>" class="btn btn-outline btn-sm">Edit</a>
+              <a href="/admin/servers/<%= s.id %>/packages" class="btn btn-outline btn-sm">Pricing</a>
+              <form method="post" action="/admin/servers/<%= s.id %>/delete" class="inline-form"
+                    onsubmit="return confirm('Hapus server <%= s.code %> — <%= s.label %> beserta semua package-nya?');">
+                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+              </form>
+            </div>
+          </div>
+          <div class="server-card-body">
+            <div class="server-card-info">
+              <span class="server-card-info-label">Endpoint</span>
+              <span class="server-card-info-value cell-mono"><%= s.endpoint %></span>
+            </div>
+            <div class="server-card-info">
+              <span class="server-card-info-label">API Key</span>
+              <span class="server-card-info-value cell-mono"><%= s.api_key.slice(0, 6) %>...</span>
+            </div>
+            <div class="server-card-info">
+              <span class="server-card-info-label">Limit VPN</span>
+              <span class="server-card-info-value"><%= s.limit_vpn === 0 ? 'Tak terbatas' : s.limit_vpn %></span>
+            </div>
+          </div>
+        </div>
+      <% }) %>
     <% } %>
   </div>
 <%- include('../partials/footer') %>
