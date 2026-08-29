@@ -2,7 +2,10 @@
 
 ## Admin: List Server jadi Kartu Panjang — SELESAI (29 Agustus 2026)
 
-- [x] Tabel list server diganti **kartu panjang** per server: header (badge kode + label + badge country + tombol Edit/Pricing/Hapus), body **1 kolom, tiap info satu baris** (label kiri + nilai kanan: Endpoint, API Key, Limit VPN) — mobile: label di atas nilai
+- [x] Tabel list server diganti **kartu panjang** per server: header (label + badge kode + badge country + tombol Edit/Pricing/Hapus), body **1 kolom, tiap info satu baris** (label kiri + nilai kanan: Endpoint, API Key, Limit VPN) — mobile: label di atas nilai
+- [x] **1 box untuk semua info** (bg `#f8fafc` + border + radius di `.server-card-body`), tanpa box per baris dan tanpa garis pemisah antar baris
+- [x] Nilai info **font regular** (tanpa `cell-mono`, weight 500) — style sama dengan teks label form
+- [x] **Badge kode+negara**: desktop di samping kanan label (sebaris), mobile (≤640px) turun di bawah label (flex column)
 - [x] Kartu yang sedang diedit di-highlight (`server-list-card-edit`, border indigo + ring)
 - [x] Fix CSS: `.card form` di-scope jadi `.card > form` agar form hapus bersarang di dalam kartu tidak kena layout kolom
 - [x] Verifikasi lokal: kartu render (2 server), highlight edit, form tambah normal, halaman admin lain 200

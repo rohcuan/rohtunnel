@@ -127,14 +127,14 @@ Flow topup: user pilih nominal → buat QRIS → tampilkan QR (qris_url) → `jo
 - **Register/Login**: user biasa; admin login lewat halaman terpisah (identitas admin dari `settings`/seed). Register wajib email + username + password (username hanya a-z0-9 kecil; email format standar); login menerima username ATAU email.
 
 ### 6.2 Dashboard User
-- **Beli VPN**: pilih server (filter negara id/sg/us) → pilih protocol (ssh/vmess/vless/trojan) → pilih package → isi username (opsional, kosong = random) → isi uuid custom (opsional, v2ray) → checkout (potong saldo, pastikan saldo cukup) → buat akun via VPN API → tampilkan config (ssh account info / vless / vmess / trojan code).
+- **Beli VPN**: pilih server (**grid 2 kolom kartu bendera SVG** + filter chip negara Semua/Indonesia/Singapore/USA; kode & label server) → section checkout muncul setelah kartu diketuk: pilih protocol (ssh/vmess/vless/trojan) → pilih package → isi username (opsional, kosong = random) → isi uuid custom (opsional, v2ray) → checkout (potong saldo, pastikan saldo cukup) → buat akun via VPN API → tampilkan config (ssh account info / vless / vmess / trojan code).
 - **Akun VPN Saya**: list akun (username, status Aktif/Terkunci, sisa bandwidth `(pakai/total GB)`, tanggal expired). Aksi: Renew, Tambah Bandwidth, Tambah IP, Hapus, Lock/Unlock (unlock dilarang jika `admin_locked`). Tiap akun → **Config siap pakai** (halaman khusus): template XL Edu, XL Conference, XL Addon XCP (IG/Tiktok/WA/FB), Tsel Ilmupedia/Kuota Belajar, Tsel Halo Flexy+, Biz Line, Biz WA — tiap template = pasangan Label + Value untuk disalin.
 - **Recovery Akun (rebuy)**: buat ulang akun lama (bisa set limit ip/bandwidth) — harga dari package recovery.
 - **Topup Saldo**: saldo sekarang, isi nominal → QRIS, riwayat topup.
 - **Hubungi Admin**: link/penjelasan kontak (dari settings).
 
 ### 6.3 Admin Dashboard
-- **Manage Server**: tambah server (endpoint, apikey, country, limit jumlah vpn termasuk ssh+v2ray), list server, konfigurasi **Pricing VPN** (per protocol: package 1/2/3 → berapa GB, limit IP, hari).
+- **Manage Server**: tambah/edit/hapus server (kode unik mis. `SRV-A`, label mis. "LinkGo Metro Teknologi", endpoint, apikey, country, limit jumlah vpn termasuk ssh+v2ray), list server (kartu panjang), konfigurasi **Pricing VPN** (per protocol: package 1/2/3 → berapa GB, limit IP, hari).
 - **User Manager**: topup/kurangi/set saldo, list akun VPN user (filter protocol), lock/unlock, edit limit IP, edit limit bandwidth (GB), hapus akun VPN.
 - **Manager Akun VPN**: semua akun dari semua server (dengan fitur find), lock/unlock, edit limit IP, edit limit bandwidth, hapus, lihat pemilik (username user).
 - **Setup QRIS API**: endpoint + key.
