@@ -118,4 +118,12 @@ Struktur kartu (expanded):
 - Semua pekerjaan sesi ter-push (`2130468`); container dev berjalan dengan code terbaru
 - DB container: server `SRV-A · LinkGo Metro Teknologi` (id 1, api_key perlu diisi ulang user)
 - Lanjutan opsional (dari sesi 1, belum berubah): isi template config asli, pricing per-aksi, pemakaian bandwidth dari API
+- **Backup/restore berpindah dari raw `.db` ke ZIP berisi banyak file** (alasan: raw .db berisiko beda versi schema/migrasi, korup, dan format tak transparan):
+  - Format `rohtunnel-backup` v1: `manifest.json` (format, version, appVersion, schemaVersion, daftar tabel & file) + `data/<tabel>.json` (array baris object per kolom) + `files/…` untuk aset arbitrer (img/svg/pdf/dll; saat ini kosong, otomatis diambil dari `data/assets/` bila ada, dan kolom BLOB dikodekan `{$blob: base64}` untuk masa depan)
+  - Modul ZIP minimal `src/services/zip.js` TANPA dependensi baru: tulis metode STORE + CRC32; baca metode STORE & DEFLATE (zlib) sehingga zip buatan luar (Telegram/python/arkip) terbaca
+  - `src/services/backup.js`: `exportZip(db)` membangun zip, `createBackupFile` menjadi `.zip`, `listBackups` pada `.zip`. Nama tetap `rohtunnel-<stamp>.zip`
+  - `src/services/restore.js`: `validate(buffer)` hanya cek isi zip+manifest (tidak menyentuh DB); `importFromZip(db, buffer)` — DELETE child-first lalu INSERT parent-first via topo-sort dari FK `PRAGMA foreign_key_list`, map kolom live via `PRAGMA table_info` (kesesuaian lintas versi), reset `sqlite_sequence`, `PRAGMA foreign_key_check` menjamin transaksi di-rollback bila ada pelanggaran; `files/assets/*` ditulis balik ke `data/assets/`
+  - `src/db.js`: pending restore sekarang `restore-pending.zip` + marker `.restore-pending`, diimpor SETELAH migrasi (aman lintas versi); DB lama dititipkan `pre-restore-*.db`; bila zip korup → di-log `[restore] GAGAL` dan boot dilanjutkan dengan data lama (tidak crash loop), marker dihapus & zip disimpan
+  - Route `POST /admin/restore` memvalidasi zip + manifest sebelum menerima (pesan error bila bukan backup rohtunnel); `restore.ejs` & `setup-backup.ejs` diperbarui (.zip)
+  - Teruji lokal: ekspor→impor round-trip 9 tabel + aset, autoincrement lanjut, boot-restore marker, dan fallback zip rusak
 - Konvensi: dokumentasi di `project-information/`; user berkomunikasi dalam Bahasa Indonesia
