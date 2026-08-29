@@ -1,0 +1,48 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Pembayaran Topup</h1>
+    <p>Topup #<%= topup.id %> — <%= formatRupiah(topup.amount) %></p>
+  </div>
+
+  <% if (topup.status === 'paid') { %>
+    <div class="panel panel-success">
+      <h3>Pembayaran diterima</h3>
+      <p>Topup sebesar <strong><%= formatRupiah(topup.amount) %></strong> telah masuk ke saldo Anda.</p>
+      <p>Saldo sekarang: <strong><%= formatRupiah(user.saldo) %></strong></p>
+      <p>Waktu: <%= new Date(topup.paid_at).toLocaleString('id-ID') %></p>
+      <a href="/topup" class="btn btn-primary">Kembali ke Topup</a>
+    </div>
+  <% } else if (topup.status === 'expired') { %>
+    <div class="panel panel-expired">
+      <h3>QRIS kedaluwarsa</h3>
+      <p>QRIS ini sudah tidak berlaku (5 menit). Silakan buat topup baru.</p>
+      <a href="/topup" class="btn btn-primary">Buat Topup Baru</a>
+    </div>
+  <% } else { %>
+    <div class="panel">
+      <h3>Scan QRIS di bawah untuk membayar</h3>
+      <p class="muted">QRIS berlaku 5 menit. Halaman ini otomatis memeriksa pembayaran setiap 5 detik.</p>
+      <iframe class="qr-frame" src="<%= topup.qris_url %>" title="QRIS Payment"></iframe>
+      <div class="topup-actions">
+        <button type="button" class="btn btn-outline" onclick="checkNow()">Cek Status Pembayaran</button>
+        <span id="status-msg" class="muted"></span>
+      </div>
+    </div>
+    <script>
+      async function checkNow() {
+        const msg = document.getElementById('status-msg');
+        msg.textContent = 'Memeriksa...';
+        try {
+          const r = await fetch('/topup/check/<%= topup.id %>');
+          const j = await r.json();
+          if (j.status === 'paid') return location.reload();
+          if (j.status === 'expired') return location.reload();
+          msg.textContent = 'Belum terbayar. Silakan coba lagi.';
+        } catch (e) {
+          msg.textContent = 'Gagal memeriksa, coba lagi.';
+        }
+      }
+      setInterval(checkNow, 5000);
+    </script>
+  <% } %>
+<%- include('partials/footer') %>

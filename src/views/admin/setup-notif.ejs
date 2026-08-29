@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Setup Notifikasi Telegram</h1>
+    <p><a href="/admin/setup" class="muted-link">← Setup</a></p>
+  </div>
+
+  <% if (msg) { %><div class="alert alert-success"><%= msg %></div><% } %>
+
+  <div class="card">
+    <form method="post" action="/admin/setup-notif">
+      <label class="check-row">
+        <input type="checkbox" name="notif_topup" value="1" <%= notif.topup ? 'checked' : '' %>>
+        Topup QRIS lunas
+      </label>
+      <label class="check-row">
+        <input type="checkbox" name="notif_adjust" value="1" <%= notif.adjust ? 'checked' : '' %>>
+        Penyesuaian saldo oleh admin (topup / kurangi / set)
+      </label>
+      <label class="check-row">
+        <input type="checkbox" name="notif_purchase" value="1" <%= notif.purchase ? 'checked' : '' %>>
+        Pembelian / renew / recovery VPN
+      </label>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+      <p class="muted">Notifikasi dikirim ke Telegram hanya jika bot sudah dikonfigurasi.</p>
+    </form>
+  </div>
+<%- include('../partials/footer') %>

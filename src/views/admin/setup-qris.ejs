@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Setup QRIS</h1>
+    <p>Konfigurasi gateway QRIS (gopay-api-gateaway) yang sudah Anda host.</p>
+  </div>
+
+  <% if (testResult) { %>
+    <div class="alert <%= testResult.ok ? 'alert-success' : 'alert-error' %>">
+      <strong><%= testResult.ok ? 'Koneksi OK' : 'Koneksi gagal' %>:</strong> <%= testResult.message %>
+    </div>
+  <% } %>
+
+  <div class="card">
+    <form method="post" action="/admin/setup-qris">
+      <label>Endpoint QRIS Gateway
+        <input type="url" name="endpoint" value="<%= endpoint %>"
+               placeholder="https://qris.domain.com" required>
+      </label>
+      <label>API Key
+        <input type="password" name="api_key" value="<%= apiKey %>" placeholder="API key rahasia">
+      </label>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" formaction="/admin/test-qris" formmethod="post"
+                class="btn btn-outline">Simpan &amp; Test Koneksi</button>
+      </div>
+    </form>
+  </div>
+<%- include('../partials/footer') %>

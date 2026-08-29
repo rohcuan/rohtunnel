@@ -1,0 +1,40 @@
+<%- include('partials/head') %>
+  <section class="hero">
+    <h1>VPN Cepat, Murah, dan Terpercaya</h1>
+    <p>Layanan SSH Tunnel &amp; V2Ray (VMess / VLess / Trojan) dengan harga terjangkau dan dukungan penuh.</p>
+    <div class="hero-actions">
+      <% if (user) { %>
+        <a href="/dashboard" class="btn btn-primary">Buka Dashboard</a>
+      <% } else { %>
+        <a href="/register" class="btn btn-primary">Daftar Sekarang</a>
+        <a href="/login" class="btn btn-outline">Masuk</a>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2>Kelebihan VPN di Tempat Kami</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Server Multi Negara</h3>
+        <p>Pilih server Indonesia, Singapura, atau USA sesuai kebutuhan Anda.</p>
+      </div>
+      <div class="feature-card">
+        <h3>4 Jenis Protocol</h3>
+        <p>SSH Tunnel, VMess, VLess, dan Trojan - lengkap semua di satu tempat.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Topup Mudah via QRIS</h3>
+        <p>Isi saldo dengan QRIS, langsung otomatis masuk tanpa ribet.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Config Siap Pakai</h3>
+        <p>Template config untuk XL Edu, XL Conference, Telkomsel, Biz, dan lainnya.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-login-link">
+    <a href="/login-admin" class="muted-link">Login sebagai Admin</a>
+  </section>
+<%- include('partials/footer') %>

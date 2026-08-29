@@ -1,0 +1,82 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Akun VPN Saya</h1>
+    <p>
+      Saldo: <strong><%= formatRupiah(user.saldo) %></strong>
+      &nbsp;<a href="/recovery" class="btn btn-outline btn-sm">Recovery Akun</a>
+    </p>
+  </div>
+
+  <% if (msg) { %><div class="alert alert-success"><%= msg %></div><% } %>
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <% if (accounts.length === 0) { %>
+    <div class="card">
+      <h3>Belum Ada Akun</h3>
+      <p class="muted">Anda belum memiliki akun VPN. <a href="/beli">Beli sekarang</a>.</p>
+    </div>
+  <% } else { %>
+    <% accounts.forEach(a => { %>
+      <div class="card account-card">
+        <div class="account-head">
+          <div>
+            <h3><%= a.username %>
+              <span class="badge badge-country"><%= a.protocol.toUpperCase() %></span>
+              <span class="badge badge-<%= a.status %>"><%= statusLabel(a.status) %></span>
+            </h3>
+            <p class="muted">
+              Server: <strong><%= a.server_name %></strong>
+              <span class="badge badge-country"><%= a.server_country.toUpperCase() %></span>
+              &middot; Expired: <strong><%= new Date(a.expired_at).toLocaleDateString('id-ID') %></strong>
+            </p>
+          </div>
+          <div class="account-meta">
+            <div class="kv-row">
+              <span class="kv-label">Kuota</span>
+              <span class="kv-value"><%= a.kuota_gb %> GB</span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-label">Pemakaian</span>
+              <span class="kv-value">— (belum tersedia dari API)</span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-label">Limit IP</span>
+              <span class="kv-value"><%= a.limit_ip %></span>
+            </div>
+          </div>
+        </div>
+        <div class="account-actions">
+          <a href="/akun/<%= a.id %>/config" class="btn btn-primary btn-sm">Config Siap Pakai</a>
+          <form method="post" action="/akun/<%= a.id %>/refresh" class="inline-form">
+            <button type="submit" class="btn btn-outline btn-sm"
+                    title="Muat ulang config dari server">Refresh Config</button>
+          </form>
+          <form method="post" action="/akun/<%= a.id %>/renew" class="inline-form"
+                onsubmit="return confirm('Renew akun <%= a.username %>? Biaya <%= formatRupiah(a.price) %>');">
+            <button type="submit" class="btn btn-outline btn-sm">Renew</button>
+          </form>
+          <form method="post" action="/akun/<%= a.id %>/add-bw" class="inline-form"
+                onsubmit="return confirm('Tambah bandwidth +<%= a.kuota_gb %> GB? Biaya <%= formatRupiah(a.price) %>');">
+            <button type="submit" class="btn btn-outline btn-sm">+ Bandwidth</button>
+          </form>
+          <form method="post" action="/akun/<%= a.id %>/add-ip" class="inline-form"
+                onsubmit="return confirm('Tambah limit IP +1? Biaya <%= formatRupiah(a.price) %>');">
+            <button type="submit" class="btn btn-outline btn-sm">+ IP</button>
+          </form>
+          <% if (a.status === 'locked' || a.status === 'active') { %>
+            <form method="post" action="/akun/<%= a.id %>/<%= a.status === 'locked' ? 'unlock' : 'lock' %>" class="inline-form"
+                  onsubmit="return confirm('<%= a.status === 'locked' ? 'Buka kunci' : 'Kunci' %> akun <%= a.username %>?');">
+              <button type="submit" class="btn btn-outline btn-sm">
+                <%= a.status === 'locked' ? 'Buka Kunci' : 'Kunci' %>
+              </button>
+            </form>
+          <% } %>
+          <form method="post" action="/akun/<%= a.id %>/delete" class="inline-form"
+                onsubmit="return confirm('Hapus akun <%= a.username %> dari server?');">
+            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+<%- include('partials/footer') %>

@@ -1,0 +1,58 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Setup Config Siap Pakai</h1>
+    <p><a href="/admin/setup" class="muted-link">← Setup</a> — Variabel yang bisa dipakai: <code>{{username}} {{password}} {{uuid}} {{hostname}} {{kuota_gb}} {{limit_ip}} {{expired_date}} {{port_tls}} {{port_any}} {{payload_payloadcdn}} {{payload_payloadwithpath}} {{link_tls}} {{link_grpc}} {{link_up}} ...</code></p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="row">
+    <div class="card col">
+      <h3><%= editing ? 'Edit Template: ' + editing.name : 'Tambah Template' %></h3>
+      <form method="post" action="/admin/setup-templates/save">
+        <% if (editing) { %><input type="hidden" name="id" value="<%= editing.id %>"><% } %>
+        <label>Nama Template
+          <input type="text" name="name" value="<%= editing ? editing.name : '' %>"
+                 placeholder="Contoh: XL Edu" required>
+        </label>
+        <label>Fields (JSON array)
+          <textarea name="fields" rows="12" class="textarea-mono"
+                    placeholder='[{"label":"Host","tpl":"{{hostname}}"},{"label":"Port","tpl":"{{port_tls}}"}]'
+                    required><%= editing ? JSON.stringify(JSON.parse(editing.fields || '[]'), null, 2) : '' %></textarea>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Simpan</button>
+          <% if (editing) { %>
+            <a href="/admin/setup-templates" class="btn btn-outline">Batal</a>
+          <% } %>
+        </div>
+      </form>
+    </div>
+    <div class="card col">
+      <h3>Daftar Template (<%= templates.length %>)</h3>
+      <% if (templates.length === 0) { %>
+        <p class="muted">Belum ada template.</p>
+      <% } else { %>
+        <table class="table table-compact">
+          <thead><tr><th>Nama</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <% templates.forEach(t => { %>
+              <tr>
+                <td><strong><%= t.name %></strong><br>
+                  <span class="muted"><%= JSON.parse(t.fields || '[]').length %> field</span></td>
+                <td class="cell-actions">
+                  <a href="/admin/setup-templates?id=<%= t.id %>" class="btn btn-outline btn-sm">Edit</a>
+                  <form method="post" action="/admin/setup-templates/delete" class="inline-form"
+                        onsubmit="return confirm('Hapus template <%= t.name %>?');">
+                    <input type="hidden" name="id" value="<%= t.id %>">
+                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,92 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Beli VPN</h1>
+    <p>Saldo Anda: <strong><%= formatRupiah(user.saldo) %></strong></p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <% if (servers.length === 0) { %>
+    <div class="alert alert-error">Belum ada server tersedia. Hubungi admin.</div>
+  <% } else { %>
+  <div class="card">
+    <form method="post" action="/beli">
+      <div class="row">
+        <label>Pilih Server
+          <select name="server_id" id="server-select" required>
+            <% const groups = {}; %>
+            <% servers.forEach(s => { (groups[s.country] = groups[s.country] || []).push(s); }); %>
+            <% Object.keys(groups).forEach(country => { %>
+              <optgroup label="<%= country.toUpperCase() %>">
+                <% groups[country].forEach(s => { %>
+                  <option value="<%= s.id %>"><%= s.name %></option>
+                <% }) %>
+              </optgroup>
+            <% }) %>
+          </select>
+        </label>
+        <label>Protocol
+          <select name="protocol" id="protocol-select" required>
+            <option value="ssh">SSH Tunnel</option>
+            <option value="vmess">VMess</option>
+            <option value="vless">VLess</option>
+            <option value="trojan">Trojan</option>
+          </select>
+        </label>
+        <label>Package
+          <select name="package_id" id="package-select" required></select>
+        </label>
+      </div>
+      <div class="row">
+        <label>Username VPN (opsional, kosong = random)
+          <input type="text" name="username" minlength="3" maxlength="20"
+                 placeholder="Kosongkan untuk random" pattern="[a-zA-Z0-9_-]{3,20}">
+        </label>
+        <label id="uuid-row">UUID Custom (opsional, kosong = random)
+          <input type="text" name="uuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Checkout</button>
+      </div>
+      <p class="muted">Saldo akan dipotong otomatis setelah akun berhasil dibuat di server.</p>
+    </form>
+  </div>
+  <% } %>
+
+  <script>
+    const PACKAGES = <%- JSON.stringify(packages).replace(/</g, '\\u003c') %>;
+    const serverSel = document.getElementById('server-select');
+    const protocolSel = document.getElementById('protocol-select');
+    const packageSel = document.getElementById('package-select');
+    const uuidRow = document.getElementById('uuid-row');
+
+    function refreshPackages() {
+      const list = PACKAGES.filter(p =>
+        p.server_id == serverSel.value && p.protocol === protocolSel.value);
+      packageSel.innerHTML = '';
+      if (list.length === 0) {
+        const o = document.createElement('option');
+        o.value = '';
+        o.textContent = 'Belum ada package';
+        packageSel.appendChild(o);
+      }
+      list.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p.id;
+        o.textContent = p.name + ' — Rp' + p.price.toLocaleString('id-ID') +
+          ' (' + p.kuota_gb + ' GB, ' + p.limit_ip + ' IP, ' + p.days + ' hari)';
+        packageSel.appendChild(o);
+      });
+    }
+
+    function refreshUuidVisibility() {
+      uuidRow.style.display = protocolSel.value === 'ssh' ? 'none' : 'flex';
+    }
+
+    serverSel.addEventListener('change', refreshPackages);
+    protocolSel.addEventListener('change', () => { refreshPackages(); refreshUuidVisibility(); });
+    refreshPackages();
+    refreshUuidVisibility();
+  </script>
+<%- include('partials/footer') %>

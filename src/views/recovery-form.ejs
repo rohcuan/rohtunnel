@@ -1,0 +1,42 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Recovery Akun</h1>
+    <p>
+      Akun lama: <strong><%= account.username %></strong>
+      <span class="badge badge-country"><%= account.protocol.toUpperCase() %></span>
+      &middot; <a href="/recovery" class="muted-link">← Daftar recovery</a>
+    </p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="card">
+    <h3>Buat Ulang Akun</h3>
+    <p class="muted">
+      Biaya: <strong><%= formatRupiah(account.price) %></strong>
+      &middot; Durasi: <%= account.days %> hari
+      &middot; Saldo Anda: <strong><%= formatRupiah(user.saldo) %></strong>
+    </p>
+    <form method="post" action="/recovery/<%= account.id %>">
+      <div class="row">
+        <label>Username (bisa diganti jika bentrok di server)
+          <input type="text" name="username" value="<%= values.username %>"
+                 minlength="3" maxlength="20" pattern="[a-zA-Z0-9_-]{3,20}" required>
+        </label>
+        <label>Kuota (GB)
+          <input type="number" name="kuota_gb" value="<%= values.kuota_gb %>"
+                 min="1" max="10000" required>
+        </label>
+        <label>Limit IP
+          <input type="number" name="limit_ip" value="<%= values.limit_ip %>"
+                 min="1" max="100" required>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary"
+                onclick="return confirm('Recovery akun dengan biaya <%= formatRupiah(account.price) %>?');">Recovery Sekarang</button>
+        <a href="/recovery" class="btn btn-outline">Batal</a>
+      </div>
+    </form>
+  </div>
+<%- include('partials/footer') %>

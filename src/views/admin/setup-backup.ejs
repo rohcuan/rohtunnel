@@ -1,0 +1,71 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Setup Autobackup</h1>
+    <p><a href="/admin/setup" class="muted-link">← Setup</a> — File tersimpan di <code>data/backup/</code> dan dikirim ke Telegram bila bot dikonfigurasi.</p>
+  </div>
+
+  <% if (msg) { %><div class="alert alert-success"><%= msg %></div><% } %>
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="row">
+    <div class="card col">
+      <h3>Harian</h3>
+      <form method="post" action="/admin/setup-backup/daily" class="schedule-form">
+        <label>Jam <input type="number" name="daily_hour" min="0" max="23" value="<%= parsed.daily.hour %>" required></label>
+        <label>Menit <input type="number" name="daily_minute" min="0" max="59" value="<%= parsed.daily.minute %>" required></label>
+        <label class="check-row"><input type="checkbox" name="active" value="1" <%= parsed.daily.active ? 'checked' : '' %>> Aktif</label>
+        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+      </form>
+    </div>
+    <div class="card col">
+      <h3>Mingguan</h3>
+      <form method="post" action="/admin/setup-backup/weekly" class="schedule-form">
+        <label>Hari
+          <select name="weekly_day">
+            <% const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu']; %>
+            <% days.forEach((d, i) => { %>
+              <option value="<%= i %>" <%= parsed.weekly.day == i ? 'selected' : '' %>><%= d %></option>
+            <% }) %>
+          </select>
+        </label>
+        <label>Jam <input type="number" name="weekly_hour" min="0" max="23" value="<%= parsed.weekly.hour %>" required></label>
+        <label>Menit <input type="number" name="weekly_minute" min="0" max="59" value="<%= parsed.weekly.minute %>" required></label>
+        <label class="check-row"><input type="checkbox" name="active" value="1" <%= parsed.weekly.active ? 'checked' : '' %>> Aktif</label>
+        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+      </form>
+    </div>
+    <div class="card col">
+      <h3>Bulanan</h3>
+      <form method="post" action="/admin/setup-backup/monthly" class="schedule-form">
+        <label>Tanggal <input type="number" name="monthly_day" min="1" max="30" value="<%= parsed.monthly.day %>" required></label>
+        <label>Jam <input type="number" name="monthly_hour" min="0" max="23" value="<%= parsed.monthly.hour %>" required></label>
+        <label>Menit <input type="number" name="monthly_minute" min="0" max="59" value="<%= parsed.monthly.minute %>" required></label>
+        <label class="check-row"><input type="checkbox" name="active" value="1" <%= parsed.monthly.active ? 'checked' : '' %>> Aktif</label>
+        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>File Backup</h3>
+    <form method="post" action="/admin/backup/run" class="inline-form">
+      <button type="submit" class="btn btn-primary">Backup &amp; Kirim Sekarang</button>
+    </form>
+    <% if (backups.length === 0) { %>
+      <p class="muted">Belum ada file backup.</p>
+    <% } else { %>
+      <table class="table">
+        <thead><tr><th>Nama</th><th>Ukuran</th><th>Waktu</th></tr></thead>
+        <tbody>
+          <% backups.slice(0, 15).forEach(b => { %>
+            <tr>
+              <td class="cell-mono"><%= b.name %></td>
+              <td><%= (b.size / 1024).toFixed(1) %> KB</td>
+              <td><%= new Date(b.name.replace('rohtunnel-','').replace('.db','').replace(/-(\d{6})/, ' $1')).toLocaleString('id-ID') %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+<%- include('../partials/footer') %>

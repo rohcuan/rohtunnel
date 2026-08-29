@@ -1,0 +1,16 @@
+<%- include('partials/head') %>
+  <div class="auth-card">
+    <h1>Masuk</h1>
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <form method="post" action="/login">
+      <label>Username
+        <input type="text" name="username" required autofocus>
+      </label>
+      <label>Password
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+    </form>
+    <p class="muted">Belum punya akun? <a href="/register">Daftar di sini</a></p>
+  </div>
+<%- include('partials/footer') %>

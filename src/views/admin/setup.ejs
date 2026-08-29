@@ -1,0 +1,32 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Setup</h1>
+    <p>Konfigurasi integrasi &amp; layanan.</p>
+  </div>
+  <div class="card-grid">
+    <a href="/admin/setup-qris" class="card card-link">
+      <h3>Setup QRIS API</h3>
+      <p>Endpoint &amp; API key gateway QRIS.</p>
+    </a>
+    <a href="/admin/setup-telegram" class="card card-link">
+      <h3>Setup Telegram Bot</h3>
+      <p>Bot token &amp; chat id untuk notifikasi &amp; backup.</p>
+    </a>
+    <a href="/admin/setup-notif" class="card card-link">
+      <h3>Setup Notifikasi</h3>
+      <p>Checklist notif topup, adjust saldo, pembelian.</p>
+    </a>
+    <a href="/admin/setup-backup" class="card card-link">
+      <h3>Setup Autobackup</h3>
+      <p>Jadwal harian/mingguan/bulanan + kirim ke Telegram.</p>
+    </a>
+    <a href="/admin/setup-templates" class="card card-link">
+      <h3>Setup Config Siap Pakai</h3>
+      <p>Kelola template config (XL Edu, Tsel, Biz, dll).</p>
+    </a>
+    <a href="/admin/restore" class="card card-link">
+      <h3>Restore Backup</h3>
+      <p>Pulihkan database dari file backup.</p>
+    </a>
+  </div>
+<%- include('../partials/footer') %>

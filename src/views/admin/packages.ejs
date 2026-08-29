@@ -1,0 +1,78 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Pricing VPN — <%= server.name %></h1>
+    <p>
+      <span class="badge badge-country"><%= server.country.toUpperCase() %></span>
+      <span class="muted"><%= server.endpoint %></span>
+      &nbsp;<a href="/admin/servers" class="muted-link">← Kembali</a>
+    </p>
+  </div>
+
+  <div class="tabs">
+    <% protocols.forEach(p => { %>
+      <a href="/admin/servers/<%= server.id %>/packages?protocol=<%= p %>"
+         class="tab <%= p === protocol ? 'tab-active' : '' %>"><%= p.toUpperCase() %></a>
+    <% }) %>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="card">
+    <h3>Tambah Package — <%= protocol.toUpperCase() %></h3>
+    <form method="post" action="/admin/servers/<%= server.id %>/packages/add">
+      <input type="hidden" name="protocol" value="<%= protocol %>">
+      <div class="row">
+        <label>Nama Package
+          <input type="text" name="name" placeholder="Contoh: Paket 1" required maxlength="50">
+        </label>
+        <label>Harga (Rp)
+          <input type="number" name="price" min="1000" max="10000000" placeholder="15000" required>
+        </label>
+        <label>Kuota (GB)
+          <input type="number" name="kuota_gb" min="1" max="10000" placeholder="100" required>
+        </label>
+        <label>Limit IP
+          <input type="number" name="limit_ip" min="1" max="100" placeholder="2" required>
+        </label>
+        <label>Durasi (hari)
+          <input type="number" name="days" min="1" max="3650" placeholder="30" required>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Simpan Package</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Daftar Package — <%= protocol.toUpperCase() %></h3>
+    <% if (packages.length === 0) { %>
+      <p class="muted">Belum ada package untuk protocol ini.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nama</th><th>Harga</th><th>Kuota</th><th>Limit IP</th><th>Durasi</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% packages.forEach(p => { %>
+            <tr>
+              <td><strong><%= p.name %></strong></td>
+              <td><%= formatRupiah(p.price) %></td>
+              <td><%= p.kuota_gb %> GB</td>
+              <td><%= p.limit_ip %></td>
+              <td><%= p.days %> hari</td>
+              <td class="cell-actions">
+                <form method="post" action="/admin/packages/<%= p.id %>/delete" class="inline-form"
+                      onsubmit="return confirm('Hapus package <%= p.name %>?');">
+                  <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+<%- include('../partials/footer') %>

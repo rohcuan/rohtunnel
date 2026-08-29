@@ -1,0 +1,34 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Setup Telegram Bot</h1>
+    <p><a href="/admin/setup" class="muted-link">← Setup</a></p>
+  </div>
+
+  <% if (testResult) { %>
+    <div class="alert <%= testResult.ok ? 'alert-success' : 'alert-error' %>">
+      <strong><%= testResult.ok ? 'Berhasil' : 'Gagal' %>:</strong> <%= testResult.message %>
+    </div>
+  <% } %>
+
+  <div class="card">
+    <form method="post" action="/admin/setup-telegram">
+      <label>Bot Token
+        <input type="password" name="bot_token" value="<%= botToken %>"
+               placeholder="123456789:AAH...dari @BotFather" required>
+      </label>
+      <label>Chat ID
+        <input type="text" name="chat_id" value="<%= chatId %>"
+               placeholder="ID chat/grup admin" required>
+      </label>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" formaction="/admin/test-telegram" formmethod="post"
+                class="btn btn-outline">Simpan &amp; Kirim Test</button>
+      </div>
+    </form>
+    <p class="muted">
+      Cara ambil Chat ID: kirim pesan ke bot, lalu buka
+      <code>https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code>.
+    </p>
+  </div>
+<%- include('../partials/footer') %>

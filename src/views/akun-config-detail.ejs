@@ -1,0 +1,39 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1><%= template.name %></h1>
+    <p>
+      Akun: <strong><%= account.username %></strong>
+      &middot; <a href="/akun/<%= account.id %>/config" class="muted-link">← Semua template</a>
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Label &amp; Nilai untuk Disalin</h3>
+    <% const escAttr = (s) => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); %>
+    <div class="kv-list">
+      <% fields.forEach(f => { %>
+        <div class="kv-row">
+          <span class="kv-label"><%= f.label %></span>
+          <code class="kv-value"><%= f.value %></code>
+          <button type="button" class="btn btn-outline btn-sm copy-btn"
+                  data-copy="<%= escAttr(f.value) %>">Salin</button>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          const old = btn.textContent;
+          btn.textContent = 'Tersalin!';
+          setTimeout(() => (btn.textContent = old), 1500);
+        } catch (e) {
+          btn.textContent = 'Gagal salin';
+        }
+      });
+    });
+  </script>
+<%- include('partials/footer') %>

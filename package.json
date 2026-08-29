@@ -1,0 +1,23 @@
+{
+  "name": "rohtunnel",
+  "version": "0.1.0",
+  "description": "Website penjualan VPN (SSH tunnel + v2ray vmess/vless/trojan) dengan topup saldo via QRIS",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node src/app.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.6.0",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "multer": "^2.3.0"
+  }
+}

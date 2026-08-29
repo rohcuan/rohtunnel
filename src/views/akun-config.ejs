@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Config Siap Pakai</h1>
+    <p>
+      Akun: <strong><%= account.username %></strong>
+      <span class="badge badge-country"><%= account.protocol.toUpperCase() %></span>
+      &middot; <a href="/akun" class="muted-link">← Kembali ke Akun Saya</a>
+    </p>
+  </div>
+
+  <div class="card-grid">
+    <% templates.forEach(t => { %>
+      <a href="/akun/<%= account.id %>/config/<%= t.id %>" class="card card-link">
+        <h3><%= t.name %></h3>
+        <p class="muted">Buka config siap pakai untuk template ini.</p>
+      </a>
+    <% }) %>
+  </div>
+<%- include('partials/footer') %>

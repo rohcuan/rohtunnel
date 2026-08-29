@@ -1,0 +1,42 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Recovery Akun</h1>
+    <p>Beli ulang akun yang sudah dihapus atau kedaluwarsa. Anda bisa mengatur ulang kuota &amp; limit IP.</p>
+  </div>
+
+  <% if (accounts.length === 0) { %>
+    <div class="card">
+      <h3>Tidak Ada Akun untuk Di-Recovery</h3>
+      <p class="muted">
+        Akun yang sudah dihapus atau kedaluwarsa akan muncul di sini.
+        <a href="/akun">← Kembali ke Akun Saya</a>
+      </p>
+    </div>
+  <% } else { %>
+    <% accounts.forEach(a => { %>
+      <div class="card account-card">
+        <div class="account-head">
+          <div>
+            <h3><%= a.username %>
+              <span class="badge badge-country"><%= a.protocol.toUpperCase() %></span>
+              <% if (a.status === 'deleted') { %>
+                <span class="badge badge-expired">Dihapus</span>
+              <% } else { %>
+                <span class="badge badge-expired">Kedaluwarsa</span>
+              <% } %>
+            </h3>
+            <p class="muted">
+              Server: <strong><%= a.server_name %></strong>
+              <span class="badge badge-country"><%= a.server_country.toUpperCase() %></span>
+              &middot; Expired: <strong><%= new Date(a.expired_at).toLocaleDateString('id-ID') %></strong>
+              &middot; Kuota lama: <%= a.kuota_gb %> GB &middot; Limit IP: <%= a.limit_ip %>
+            </p>
+          </div>
+          <div>
+            <a href="/recovery/<%= a.id %>" class="btn btn-primary btn-sm">Recovery</a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+<%- include('partials/footer') %>

@@ -1,0 +1,74 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>Manage Server</h1>
+    <p>Tambahkan server VPN (endpoint Potato API + API key) dan atur pricing package-nya.</p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="card">
+    <h3>Tambah Server</h3>
+    <form method="post" action="/admin/servers/add">
+      <div class="row">
+        <label>Nama Server
+          <input type="text" name="name" placeholder="Contoh: SG-1" required maxlength="50">
+        </label>
+        <label>Endpoint API
+          <input type="url" name="endpoint" placeholder="https://rohserver1.dpdns.org/vps" required>
+        </label>
+        <label>API Key
+          <input type="password" name="api_key" placeholder="Bearer token" required>
+        </label>
+      </div>
+      <div class="row">
+        <label>Country
+          <select name="country">
+            <option value="id">Indonesia</option>
+            <option value="sg">Singapore</option>
+            <option value="us">USA</option>
+          </select>
+        </label>
+        <label>Limit Jumlah VPN (0 = tanpa batas)
+          <input type="number" name="limit_vpn" min="0" value="0" required>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Simpan Server</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>List Server</h3>
+    <% if (servers.length === 0) { %>
+      <p class="muted">Belum ada server. Tambahkan server pertama di atas.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nama</th><th>Country</th><th>Endpoint</th><th>API Key</th>
+            <th>Limit VPN</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% servers.forEach(s => { %>
+            <tr>
+              <td><strong><%= s.name %></strong></td>
+              <td><span class="badge badge-country"><%= s.country.toUpperCase() %></span></td>
+              <td class="cell-mono"><%= s.endpoint %></td>
+              <td class="cell-mono"><%= s.api_key.slice(0, 6) %>...</td>
+              <td><%= s.limit_vpn === 0 ? 'Tak terbatas' : s.limit_vpn %></td>
+              <td class="cell-actions">
+                <a href="/admin/servers/<%= s.id %>/packages" class="btn btn-outline btn-sm">Pricing</a>
+                <form method="post" action="/admin/servers/<%= s.id %>/delete" class="inline-form"
+                      onsubmit="return confirm('Hapus server <%= s.name %> beserta semua package-nya?');">
+                  <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,60 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Akun Berhasil Dibuat</h1>
+    <p>
+      <span class="badge badge-country"><%= account.protocol.toUpperCase() %></span>
+      Saldo Anda sekarang: <strong><%= formatRupiah(user.saldo) %></strong>
+    </p>
+  </div>
+
+  <div class="panel panel-success">
+    <h3>Detail Akun</h3>
+    <table class="table">
+      <tbody>
+        <tr><td class="kv-label">Username</td><td class="cell-mono"><%= account.username %></td></tr>
+        <tr><td class="kv-label">Kuota</td><td><%= account.kuota_gb %> GB</td></tr>
+        <tr><td class="kv-label">Limit IP</td><td><%= account.limit_ip %></td></tr>
+        <tr><td class="kv-label">Expired</td><td><%= new Date(account.expired_at).toLocaleDateString('id-ID') %></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Config Akun</h3>
+    <% const escAttr = (s) => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); %>
+    <% if (configItems.length === 0) { %>
+      <p class="muted">Config belum tersedia. Coba cek kembali nanti atau hubungi admin.</p>
+    <% } else { %>
+      <div class="kv-list">
+        <% configItems.forEach(item => { %>
+          <div class="kv-row">
+            <span class="kv-label"><%= item.label %></span>
+            <code class="kv-value"><%= item.value %></code>
+            <button type="button" class="btn btn-outline btn-sm copy-btn"
+                    data-copy="<%= escAttr(item.value) %>">Salin</button>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="form-actions">
+    <a href="/beli" class="btn btn-primary">Beli Lagi</a>
+    <a href="/dashboard" class="btn btn-outline">Ke Dashboard</a>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          const old = btn.textContent;
+          btn.textContent = 'Tersalin!';
+          setTimeout(() => (btn.textContent = old), 1500);
+        } catch (e) {
+          btn.textContent = 'Gagal salin';
+        }
+      });
+    });
+  </script>
+<%- include('partials/footer') %>

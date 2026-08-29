@@ -1,0 +1,89 @@
+<%- include('../partials/head') %>
+  <div class="page-title">
+    <h1>User: <%= target.username %></h1>
+    <p><a href="/admin/users" class="muted-link">← Semua user</a></p>
+  </div>
+
+  <% if (msg) { %><div class="alert alert-success"><%= msg %></div><% } %>
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="row">
+    <div class="card col">
+      <h3>Saldo: <%= formatRupiah(target.saldo) %></h3>
+      <div class="saldo-adjust">
+        <form method="post" action="/admin/users/<%= target.id %>/topup" class="adjust-form">
+          <strong>Topup</strong>
+          <input type="number" name="amount" min="1000" placeholder="Nominal" required>
+          <button type="submit" class="btn btn-primary btn-sm">+</button>
+        </form>
+        <form method="post" action="/admin/users/<%= target.id %>/kurangi" class="adjust-form">
+          <strong>Kurangi</strong>
+          <input type="number" name="amount" min="1000" placeholder="Nominal" required>
+          <button type="submit" class="btn btn-danger btn-sm">-</button>
+        </form>
+        <form method="post" action="/admin/users/<%= target.id %>/set" class="adjust-form">
+          <strong>Set</strong>
+          <input type="number" name="saldo" min="0" placeholder="Saldo baru" required>
+          <button type="submit" class="btn btn-outline btn-sm">Set</button>
+        </form>
+      </div>
+    </div>
+    <div class="card col">
+      <h3>Riwayat Transaksi</h3>
+      <% if (transactions.length === 0) { %>
+        <p class="muted">Belum ada transaksi.</p>
+      <% } else { %>
+        <table class="table table-compact">
+          <thead><tr><th>Jenis</th><th>Jumlah</th><th>Detail</th><th>Waktu</th></tr></thead>
+          <tbody>
+            <% transactions.forEach(t => { %>
+              <tr>
+                <td><%= t.type %></td>
+                <td><%= t.amount > 0 ? '+' : '' %><%= formatRupiah(t.amount) %></td>
+                <td class="cell-mono"><%= t.detail || '' %></td>
+                <td><%= new Date(t.created_at + 'Z').toLocaleString('id-ID') %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Akun VPN <%= target.username %></h3>
+    <div class="tabs">
+      <a href="/admin/users/<%= target.id %>" class="tab <%= protocol === '' ? 'tab-active' : '' %>">SEMUA</a>
+      <% protocols.forEach(p => { %>
+        <a href="/admin/users/<%= target.id %>?protocol=<%= p %>"
+           class="tab <%= protocol === p ? 'tab-active' : '' %>"><%= p.toUpperCase() %></a>
+      <% }) %>
+    </div>
+    <% if (accounts.length === 0) { %>
+      <p class="muted">Tidak ada akun.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Username</th><th>Proto</th><th>Server</th><th>Status</th>
+            <th>Kuota</th><th>IP</th><th>Expired</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% accounts.forEach(a => { %>
+            <tr>
+              <td class="cell-mono"><%= a.username %></td>
+              <td><span class="badge badge-country"><%= a.protocol.toUpperCase() %></span></td>
+              <td><%= a.server_name %> <span class="badge badge-country"><%= a.server_country.toUpperCase() %></span></td>
+              <td><span class="badge badge-<%= a.status %>"><%= statusLabel(a.status) %></span></td>
+              <td><%= a.kuota_gb %> GB</td>
+              <td><%= a.limit_ip %></td>
+              <td><%= new Date(a.expired_at).toLocaleDateString('id-ID') %></td>
+              <td><%- include('partials/akun-actions', { a, back: '/admin/users/' + target.id + '?protocol=' + protocol }) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+<%- include('../partials/footer') %>

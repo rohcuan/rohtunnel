@@ -1,0 +1,41 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Topup Saldo</h1>
+    <p>Saldo sekarang: <strong><%= formatRupiah(user.saldo) %></strong></p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="card">
+    <h3>Isi Nominal</h3>
+    <form method="post" action="/topup" class="topup-form">
+      <input type="number" name="amount" min="5000" max="10000000" step="1000"
+             placeholder="Contoh: 25000" required autofocus>
+      <button type="submit" class="btn btn-primary">Buat QRIS</button>
+    </form>
+    <p class="muted">Nominal 5.000 - 10.000.000 rupiah. QRIS berlaku 5 menit.</p>
+  </div>
+
+  <div class="card">
+    <h3>Riwayat Topup</h3>
+    <% if (riwayat.length === 0) { %>
+      <p class="muted">Belum ada topup.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr><th>ID</th><th>Nominal</th><th>Status</th><th>Waktu</th></tr>
+        </thead>
+        <tbody>
+          <% riwayat.forEach(t => { %>
+            <tr>
+              <td>#<%= t.id %></td>
+              <td><%= formatRupiah(t.amount) %></td>
+              <td><span class="badge badge-<%= t.status %>"><%= statusLabel(t.status) %></span></td>
+              <td><%= new Date(t.created_at).toLocaleString('id-ID') %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+<%- include('partials/footer') %>

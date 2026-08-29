@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | <%= siteName %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="brand"><%= siteName %></a>
+      <nav class="nav">
+        <% if (user) { %>
+          <span class="nav-saldo">Saldo: Rp<%= Number(user.saldo).toLocaleString('id-ID') %></span>
+          <% if (user.is_admin) { %>
+            <a href="/admin">Admin</a>
+          <% } else { %>
+            <a href="/dashboard">Dashboard</a>
+          <% } %>
+          <a href="/logout">Keluar</a>
+        <% } else { %>
+          <a href="/login">Masuk</a>
+          <a href="/register" class="btn btn-primary btn-sm">Daftar</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
