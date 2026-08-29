@@ -608,15 +608,15 @@ body.login-page {
 .server-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .server-card-actions .inline-form { display: inline-flex; }
 .server-card-body {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin-top: 14px;
 }
 .server-card-info {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  align-items: center;
+  gap: 12px;
   background: #f8fafc;
   border: 1px solid var(--border-light);
   border-radius: 8px;
@@ -624,6 +624,7 @@ body.login-page {
   min-width: 0;
 }
 .server-card-info-label {
+  flex: 0 0 130px;
   font-size: 11px;
   color: var(--muted);
   font-weight: 600;
@@ -631,10 +632,16 @@ body.login-page {
   letter-spacing: 0.03em;
 }
 .server-card-info-value {
+  flex: 1;
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
   word-break: break-all;
+}
+@media (max-width: 640px) {
+  .server-card-info { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .server-card-info-label { flex: none; }
+  .server-card-info-value { width: 100%; }
 }
 
 /* ============ Footer ============ */
