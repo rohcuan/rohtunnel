@@ -9,7 +9,7 @@
 
   <div class="card">
     <form method="get" action="/admin/akun" class="filter-form">
-      <input type="text" name="q" value="<%= filters.q %>" placeholder="Cari username akun / pemilik...">
+      <input type="text" name="q" value="<%= filters.q %>" placeholder="Cari username akun / pemilik..." class="form-control search-field">
       <select name="protocol">
         <option value="">Semua protocol</option>
         <% protocols.forEach(p => { %>

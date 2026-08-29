@@ -27,7 +27,12 @@ app.use(loadUser(db));
 
 app.use((req, res, next) => {
   res.locals.user = req.user;
+  res.locals.bodyClass = null;
   res.locals.siteName = getSetting("site_name", "RohTunnel");
+  res.locals.contactAdmin = getSetting(
+    "contact_admin",
+    "https://t.me/your_admin_here"
+  );
   res.locals.hideSaldo = false;
   res.locals.formatRupiah = (n) =>
     "Rp" + Number(n || 0).toLocaleString("id-ID");

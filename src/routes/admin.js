@@ -9,7 +9,14 @@ module.exports = (db) => {
   const router = express.Router();
 
   router.get("/admin", requireAdmin, (req, res) => {
-    res.render("admin/dashboard", { title: "Admin Dashboard", user: req.user });
+    const stats = {
+      users: db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_admin = 0").get().c,
+      servers: db.prepare("SELECT COUNT(*) AS c FROM servers").get().c,
+      accounts: db
+        .prepare("SELECT COUNT(*) AS c FROM vpn_accounts WHERE status != 'deleted'")
+        .get().c,
+    };
+    res.render("admin/dashboard", { title: "Admin Dashboard", user: req.user, stats });
   });
 
   router.get("/admin/setup-qris", requireAdmin, (req, res) => {

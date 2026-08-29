@@ -1,29 +1,43 @@
 <%- include('../partials/head') %>
-  <div class="page-title">
-    <h1>Admin Dashboard</h1>
-    <p>Halo, <strong><%= user.username %></strong>!</p>
+  <div class="banner">
+    <h2>Admin Dashboard</h2>
+    <p class="banner-sub">Halo, <strong><%= user.username %></strong>!</p>
+    <div class="banner-isep"></div>
+    <div class="banner-grid">
+      <div class="banner-item">
+        <div class="label">Total User</div>
+        <div class="value"><%= stats.users %></div>
+      </div>
+      <div class="banner-item">
+        <div class="label">Server</div>
+        <div class="value"><%= stats.servers %></div>
+      </div>
+      <div class="banner-item">
+        <div class="label">Akun VPN</div>
+        <div class="value"><%= stats.accounts %></div>
+      </div>
+    </div>
   </div>
   <div class="card-grid">
-    <a href="/admin/servers" class="card card-link">
+    <a href="/admin/servers" class="card">
       <h3>Manage Server</h3>
       <p>Tambahkan server VPN &amp; atur pricing package.</p>
     </a>
-    <a href="/admin/users" class="card card-link">
+    <a href="/admin/users" class="card">
       <h3>User Manager</h3>
       <p>Atur saldo &amp; kelola akun VPN user.</p>
     </a>
-    <a href="/admin/akun" class="card card-link">
+    <a href="/admin/akun" class="card">
       <h3>Manager Akun VPN</h3>
       <p>Semua akun VPN dari semua server.</p>
     </a>
-    <a href="/admin/setup" class="card card-link">
+    <a href="/admin/setup" class="card">
       <h3>Setup</h3>
       <p>QRIS API, Telegram Bot, Autobackup, Template Config.</p>
     </a>
-    <a href="/admin/restore" class="card card-link">
+    <a href="/admin/restore" class="card">
       <h3>Restore Backup</h3>
       <p>Pulihkan database dari backup.</p>
     </a>
   </div>
-  <p class="muted">Fitur admin akan diisi bertahap sesuai fase di plan.md.</p>
 <%- include('../partials/footer') %>

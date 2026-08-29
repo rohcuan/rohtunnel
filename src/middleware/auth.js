@@ -10,7 +10,7 @@ function loadUser(db) {
 
     const row = db
       .prepare(
-        `SELECT s.token, s.expires_at, u.id, u.username, u.saldo, u.is_admin
+        `SELECT s.token, s.expires_at, u.id, u.username, u.email, u.saldo, u.is_admin
          FROM login_sessions s
          JOIN users u ON u.id = s.user_id
          WHERE s.token = ?`
@@ -27,6 +27,7 @@ function loadUser(db) {
     req.user = {
       id: row.id,
       username: row.username,
+      email: row.email,
       saldo: row.saldo,
       is_admin: !!row.is_admin,
     };

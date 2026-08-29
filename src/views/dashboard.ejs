@@ -1,25 +1,39 @@
 <%- include('partials/head') %>
-  <div class="page-title">
-    <h1>Dashboard</h1>
-    <p>Halo, <strong><%= user.username %></strong>! Saldo Anda: <strong>Rp<%= Number(user.saldo).toLocaleString('id-ID') %></strong></p>
+  <div class="banner">
+    <h2>Halo, <%= user.username %>!</h2>
+    <p class="banner-sub">Selamat datang kembali di dashboard Anda.</p>
+    <div class="banner-isep"></div>
+    <div class="banner-grid">
+      <div class="banner-item">
+        <div class="label">Saldo</div>
+        <div class="value"><%= formatRupiah(user.saldo) %></div>
+      </div>
+      <div class="banner-item">
+        <div class="label">Akun VPN Aktif</div>
+        <div class="value"><%= stats.active %></div>
+      </div>
+      <div class="banner-item">
+        <div class="label">Total Akun</div>
+        <div class="value"><%= stats.total %></div>
+      </div>
+    </div>
   </div>
   <div class="card-grid">
-    <a href="/beli" class="card card-link">
+    <a href="/beli" class="card">
       <h3>Beli VPN</h3>
       <p>Pilih server, protocol, dan package.</p>
     </a>
-    <a href="/akun" class="card card-link">
+    <a href="/akun" class="card">
       <h3>Akun VPN Saya</h3>
       <p>Kelola akun &amp; lihat config siap pakai.</p>
     </a>
-    <a href="/topup" class="card card-link">
+    <a href="/topup" class="card">
       <h3>Topup Saldo</h3>
       <p>Isi saldo via QRIS.</p>
     </a>
-    <a href="#" class="card card-link">
+    <a href="<%= contactAdmin %>" target="_blank" rel="noopener" class="card">
       <h3>Hubungi Admin</h3>
       <p>Butuh bantuan? Hubungi admin kami.</p>
     </a>
   </div>
-  <p class="muted">Menu Beli VPN, Akun VPN, dan Topup akan tersedia di fase berikutnya.</p>
 <%- include('partials/footer') %>

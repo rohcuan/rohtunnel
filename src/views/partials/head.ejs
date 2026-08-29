@@ -7,25 +7,91 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/" class="brand"><%= siteName %></a>
-      <nav class="nav">
+  <% if (!bodyClass) { %>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand"><%= siteName %></a>
+      <div class="navbar-nav">
         <% if (user) { %>
-          <% if (!hideSaldo) { %>
-            <span class="nav-saldo">Saldo: <%= formatRupiah(user.saldo) %></span>
-          <% } %>
-          <% if (user.is_admin) { %>
-            <a href="/admin">Admin</a>
-          <% } else { %>
-            <a href="/dashboard">Dashboard</a>
-          <% } %>
-          <a href="/logout">Keluar</a>
+          <div class="user-dropdown">
+            <div class="user-trigger" onclick="toggleDropdown()">
+              <div class="user-info">
+                <span class="user-name">Menu</span>
+              </div>
+              <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+              <div class="dropdown-header">
+                <div class="has-sub">
+                  <div class="dropdown-row" style="cursor:pointer;" onclick="toggleSubmenu(this)">
+                    <span class="dropdown-label" style="font-weight:600;color:#1a1a2e;">Info Profil</span>
+                    <svg class="chevron sub-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="submenu">
+                    <div class="dropdown-field" style="margin:8px 12px 0;">
+                      <span class="dropdown-field-label">Role</span>
+                      <span class="dropdown-field-value"><%= user.is_admin ? 'admin' : 'user' %></span>
+                    </div>
+                    <div class="dropdown-field" style="margin:8px 12px 0;">
+                      <span class="dropdown-field-label">Username</span>
+                      <span class="dropdown-field-value"><%= user.username %></span>
+                    </div>
+                    <% if (user.email) { %>
+                    <div class="dropdown-field" style="margin:8px 12px 10px;">
+                      <span class="dropdown-field-label">Email</span>
+                      <span class="dropdown-field-value"><%= user.email %></span>
+                    </div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-body">
+                <% if (user.is_admin) { %>
+                  <a class="dropdown-item" href="/admin">Admin Dashboard</a>
+                  <a class="dropdown-item" href="/admin/servers">Manage Server</a>
+                  <a class="dropdown-item" href="/admin/users">User Manager</a>
+                  <a class="dropdown-item" href="/admin/akun">Manager Akun VPN</a>
+                  <a class="dropdown-item" href="/admin/setup">Setup</a>
+                  <a class="dropdown-item" href="/admin/restore">Restore Backup</a>
+                <% } else { %>
+                  <div class="dropdown-row">
+                    <span class="dropdown-label">Saldo Panel</span>
+                    <span class="dropdown-value"><%= formatRupiah(user.saldo) %></span>
+                  </div>
+                  <a class="dropdown-item" href="/dashboard">Dashboard</a>
+                  <a class="dropdown-item" href="/beli">Beli VPN</a>
+                  <a class="dropdown-item" href="/akun">Akun VPN Saya</a>
+                  <a class="dropdown-item" href="/recovery">Recovery Akun</a>
+                  <a class="dropdown-item" href="/topup">Topup Saldo</a>
+                  <a class="dropdown-item" href="<%= contactAdmin %>" target="_blank" rel="noopener">Hubungi Admin</a>
+                <% } %>
+              </div>
+              <div class="dropdown-footer">
+                <a href="/logout" class="dropdown-logout">Logout</a>
+              </div>
+            </div>
+          </div>
         <% } else { %>
-          <a href="/login">Masuk</a>
+          <a href="/login" class="nav-link">Masuk</a>
           <a href="/register" class="btn btn-primary btn-sm">Daftar</a>
         <% } %>
-      </nav>
+      </div>
     </div>
   </header>
+  <script>
+    function toggleDropdown() {
+      document.getElementById('userDropdown').classList.toggle('show');
+    }
+    function toggleSubmenu(el) {
+      el.parentElement.classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      var dd = document.getElementById('userDropdown');
+      if (dd && !e.target.closest('.user-dropdown')) {
+        dd.classList.remove('show');
+        document.querySelectorAll('.has-sub.open').forEach(function(h) { h.classList.remove('open'); });
+      }
+    });
+  </script>
+  <% } %>
   <main class="container">
