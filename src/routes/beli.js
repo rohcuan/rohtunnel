@@ -32,14 +32,17 @@ module.exports = (db) => {
   const randomUsername = () => "u" + crypto.randomBytes(4).toString("hex");
   const randomPassword = () => crypto.randomBytes(8).toString("base64url");
 
-  const renderBeli = (req, res, error, status = 200) =>
-    res.status(status).render("beli", {
+  const renderBeli = (req, res, error, status = 200) => {
+    const selectedId = req.body && req.body.server_id ? parseInt(req.body.server_id, 10) : null;
+    return res.status(status).render("beli", {
       title: "Beli VPN",
       user: req.user,
       servers: listServers.all(),
       packages: listActivePackages.all(),
       error,
+      selectedId,
     });
+  };
 
   router.get("/beli", requireUser, (req, res) => {
     renderBeli(req, res, null);

@@ -6,6 +6,8 @@
 - [x] Form tambah server: field **Kode Server** (validasi `^[A-Z0-9-]{2,20}$`, otomatis uppercase, unik) + **Label** (maks 100) menggantikan Nama Server
 - [x] List server admin: kolom Kode + Label; halaman pricing: `SRV-A · LinkGo Metro Teknologi`; filter server admin akun: `code · label`
 - [x] Halaman Beli VPN: pemilihan server jadi **grid 2 kolom kartu bendera** (emoji 🇮🇩🇸🇬🇺🇸 + badge kode + label) + filter chip negara (Semua/Indonesia/Singapore/USA); radio kartu state aktif indigo; package refresh per server terpilih
+- [x] Emoji bendera diganti **gambar SVG asli** (`src/public/flags/id.svg, sg.svg, us.svg`, self-hosted) di kartu server & filter chip
+- [x] Section checkout (protocol, package, username, uuid, tombol checkout) **tersembunyi** sampai kartu server diketuk; state terseleksi & section tetap tampil saat re-render error (radio `checked` dipertahankan via `selectedId`)
 - [x] Semua join `s.name AS server_name` → `s.label` (akun, admin users/akun, recovery) + detail transaksi beli
 - [x] Verifikasi lokal: validasi kode (duplikat/bentuk), grid beli render, migrasi backfill pada skema lama (name→label, SRV-<id>)
 

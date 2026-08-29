@@ -533,8 +533,12 @@ body.login-page {
 
 /* ============ Server picker (beli) ============ */
 .server-picker { width: 100%; }
+.server-picker-hint { margin-bottom: 14px; }
 .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
 .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 14px;
   border: 1px solid #ddd;
   border-radius: 999px;
@@ -548,6 +552,7 @@ body.login-page {
 .chip:hover { border-color: var(--primary); color: var(--primary); }
 .chip-active { background: var(--primary); border-color: var(--primary); color: #fff; }
 .chip-active:hover { color: #fff; }
+.chip-flag { width: 18px; height: 12px; border-radius: 2px; object-fit: cover; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
 .server-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 @media (max-width: 640px) {
   .server-grid { grid-template-columns: 1fr; }
@@ -572,11 +577,21 @@ body.login-page {
   background: #f5f7ff;
   box-shadow: 0 0 0 3px rgba(67,97,238,0.1);
 }
-.server-flag { font-size: 32px; line-height: 1; flex: 0 0 auto; }
+.server-flag { flex: 0 0 auto; }
+.server-flag img {
+  width: 42px;
+  height: 28px;
+  border-radius: 3px;
+  object-fit: cover;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
 .server-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .server-name { display: flex; align-items: center; gap: 8px; }
 .server-country { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
 .server-label { font-weight: 600; font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.checkout-section { margin-top: 16px; }
+.checkout-section.hidden { display: none; }
 
 /* ============ Footer ============ */
 .site-footer {

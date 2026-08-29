@@ -14,18 +14,17 @@
       <div class="server-picker">
         <div class="filter-chips">
           <button type="button" class="chip chip-active" data-country="">Semua</button>
-          <button type="button" class="chip" data-country="id">&#127470;&#127463; Indonesia</button>
-          <button type="button" class="chip" data-country="sg">&#127480;&#127469; Singapore</button>
-          <button type="button" class="chip" data-country="us">&#127482;&#127480; USA</button>
+          <button type="button" class="chip" data-country="id"><img src="/flags/id.svg" alt="Indonesia" class="chip-flag"> Indonesia</button>
+          <button type="button" class="chip" data-country="sg"><img src="/flags/sg.svg" alt="Singapore" class="chip-flag"> Singapore</button>
+          <button type="button" class="chip" data-country="us"><img src="/flags/us.svg" alt="USA" class="chip-flag"> USA</button>
         </div>
+        <p class="muted server-picker-hint">Ketuk salah satu server di bawah untuk melanjutkan.</p>
         <div class="server-grid">
           <% servers.forEach(s => { %>
             <label class="server-card" data-country="<%= s.country %>">
-              <input type="radio" name="server_id" value="<%= s.id %>" required>
+              <input type="radio" name="server_id" value="<%= s.id %>" <%= selectedId == s.id ? 'checked' : '' %> required>
               <div class="server-flag">
-                <% if (s.country === 'id') { %>&#127470;&#127463;<% } %>
-                <% if (s.country === 'sg') { %>&#127480;&#127469;<% } %>
-                <% if (s.country === 'us') { %>&#127482;&#127480;<% } %>
+                <img src="/flags/<%= s.country %>.svg" alt="<%= s.country.toUpperCase() %>">
               </div>
               <div class="server-info">
                 <div class="server-name">
@@ -38,32 +37,34 @@
           <% }) %>
         </div>
       </div>
-      <div class="row" style="margin-top:16px;">
-        <label>Protocol
-          <select name="protocol" id="protocol-select" required>
-            <option value="ssh">SSH Tunnel</option>
-            <option value="vmess">VMess</option>
-            <option value="vless">VLess</option>
-            <option value="trojan">Trojan</option>
-          </select>
-        </label>
-        <label>Package
-          <select name="package_id" id="package-select" required></select>
-        </label>
+      <div id="checkout-section" class="checkout-section hidden">
+        <div class="row">
+          <label>Protocol
+            <select name="protocol" id="protocol-select" required>
+              <option value="ssh">SSH Tunnel</option>
+              <option value="vmess">VMess</option>
+              <option value="vless">VLess</option>
+              <option value="trojan">Trojan</option>
+            </select>
+          </label>
+          <label>Package
+            <select name="package_id" id="package-select" required></select>
+          </label>
+        </div>
+        <div class="row">
+          <label>Username VPN (opsional, kosong = random)
+            <input type="text" name="username" minlength="3" maxlength="20"
+                   placeholder="Kosongkan untuk random" pattern="[a-zA-Z0-9_-]{3,20}">
+          </label>
+          <label id="uuid-row">UUID Custom (opsional, kosong = random)
+            <input type="text" name="uuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Checkout</button>
+        </div>
+        <p class="muted">Saldo akan dipotong otomatis setelah akun berhasil dibuat di server.</p>
       </div>
-      <div class="row">
-        <label>Username VPN (opsional, kosong = random)
-          <input type="text" name="username" minlength="3" maxlength="20"
-                 placeholder="Kosongkan untuk random" pattern="[a-zA-Z0-9_-]{3,20}">
-        </label>
-        <label id="uuid-row">UUID Custom (opsional, kosong = random)
-          <input type="text" name="uuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
-        </label>
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Checkout</button>
-      </div>
-      <p class="muted">Saldo akan dipotong otomatis setelah akun berhasil dibuat di server.</p>
     </form>
   </div>
   <% } %>
@@ -73,6 +74,7 @@
     const protocolSel = document.getElementById('protocol-select');
     const packageSel = document.getElementById('package-select');
     const uuidRow = document.getElementById('uuid-row');
+    const checkoutSection = document.getElementById('checkout-section');
     const serverRadios = Array.from(document.querySelectorAll('input[name="server_id"]'));
 
     const getServerId = () => {
@@ -83,6 +85,7 @@
       document.querySelectorAll('.server-card').forEach(card =>
         card.classList.toggle('selected', card.querySelector('input').checked));
     };
+    const revealCheckout = () => checkoutSection.classList.remove('hidden');
 
     function refreshPackages() {
       const list = PACKAGES.filter(p =>
@@ -109,6 +112,7 @@
 
     serverRadios.forEach(r => r.addEventListener('change', () => {
       markSelected();
+      revealCheckout();
       refreshPackages();
     }));
 
@@ -125,15 +129,15 @@
         const checked = serverRadios.find(r => r.checked);
         if (!checked || checked.closest('.server-card').classList.contains('hidden')) {
           const firstVisible = document.querySelector('.server-card:not(.hidden) input');
-          if (firstVisible) { firstVisible.checked = true; markSelected(); }
+          if (firstVisible) { firstVisible.checked = true; markSelected(); revealCheckout(); }
         }
         refreshPackages();
       });
     });
 
-    if (serverRadios.length > 0) {
-      serverRadios[0].checked = true;
+    if (serverRadios.some(r => r.checked)) {
       markSelected();
+      revealCheckout();
     }
     refreshPackages();
     refreshUuidVisibility();
