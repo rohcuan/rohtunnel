@@ -84,6 +84,7 @@ Urutan iterasi (hasil akhir di `2130468`):
 6. **Badge hanya kode** (`[SRV-A]`): desktop di kanan label (sebaris), mobile (≤640px) turun ke baris bawah label (label `flex: 1 0 100%`, title pakai row+wrap)
 7. **Negara bukan badge** — badge s.d. hanya `[SRV-A]`; negara dipindah jadi baris info `COUNTRY` (nama lengkap, mis. `Indonesia`, bukan kode `ID`) di box bawah bersama Endpoint/API Key/Limit VPN
 8. **Collapsible (default tertutup)** — collapsed hanya tampil label + badge + chevron; klik toggle (seluruh baris) membuka aksi (Edit · Pricing · Hapus) + box info. Kartu yang sedang diedit otomatis terbuka (`server-list-card-open`, chevron rotate 180°); JS `toggleServerCard()` di servers.ejs
+9. **Halaman form terpisah** — box tambah server di atas list diganti tombol "Tambah Server" → `/admin/servers/new`; edit → `/admin/servers/:id/edit`; form di `admin/server-form.ejs` dengan **1 baris = 1 field** (stacked vertikal, tanpa `.row` multi-kolom); sukses redirect ke `/admin/servers`
 
 Struktur kartu (expanded):
 ```
