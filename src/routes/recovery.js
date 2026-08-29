@@ -2,7 +2,7 @@
 
 const express = require("express");
 const crypto = require("crypto");
-const { requireAuth } = require("../middleware/auth");
+const { requireUser } = require("../middleware/auth");
 const vpnApi = require("../services/vpnApi");
 const notifier = require("../services/notifier");
 
@@ -28,7 +28,7 @@ module.exports = (db) => {
 
   const randomPassword = () => crypto.randomBytes(8).toString("base64url");
 
-  router.get("/recovery", requireAuth, (req, res) => {
+  router.get("/recovery", requireUser, (req, res) => {
     res.render("recovery", {
       title: "Recovery Akun",
       user: req.user,
@@ -36,7 +36,7 @@ module.exports = (db) => {
     });
   });
 
-  router.get("/recovery/:id", requireAuth, (req, res) => {
+  router.get("/recovery/:id", requireUser, (req, res) => {
     const account = getRecoverable.get(
       req.params.id,
       req.user.id,
@@ -56,7 +56,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/recovery/:id", requireAuth, async (req, res) => {
+  router.post("/recovery/:id", requireUser, async (req, res) => {
     const account = getRecoverable.get(
       req.params.id,
       req.user.id,

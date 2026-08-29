@@ -61,9 +61,15 @@ function requireAuth(req, res, next) {
   next();
 }
 
+function requireUser(req, res, next) {
+  if (!req.user) return res.redirect("/login");
+  if (req.user.is_admin) return res.redirect("/admin");
+  next();
+}
+
 function cryptoRandomHex(bytes) {
   const crypto = require("crypto");
   return crypto.randomBytes(bytes).toString("hex");
 }
 
-module.exports = { loadUser, createSession, destroySession, requireAuth };
+module.exports = { loadUser, createSession, destroySession, requireAuth, requireUser };

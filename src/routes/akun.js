@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-const { requireAuth } = require("../middleware/auth");
+const { requireUser } = require("../middleware/auth");
 const vpnApi = require("../services/vpnApi");
 const { renderTemplate } = require("../services/templateRenderer");
 const notifier = require("../services/notifier");
@@ -50,7 +50,7 @@ module.exports = (db) => {
     return fn(account, server);
   };
 
-  router.get("/akun", requireAuth, (req, res) => {
+  router.get("/akun", requireUser, (req, res) => {
     res.render("akun", {
       title: "Akun VPN Saya",
       user: req.user,
@@ -60,7 +60,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/akun/:id/renew", requireAuth, (req, res) => {
+  router.post("/akun/:id/renew", requireUser, (req, res) => {
     withAccount(req, res, async (account, server) => {
       const price = account.price;
       if (!Number.isInteger(price) || price <= 0) {
@@ -113,7 +113,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/akun/:id/add-bw", requireAuth, (req, res) => {
+  router.post("/akun/:id/add-bw", requireUser, (req, res) => {
     withAccount(req, res, async (account, server) => {
       const price = account.price;
       if (!Number.isInteger(price) || price <= 0) {
@@ -159,7 +159,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/akun/:id/add-ip", requireAuth, (req, res) => {
+  router.post("/akun/:id/add-ip", requireUser, (req, res) => {
     withAccount(req, res, async (account, server) => {
       const price = account.price;
       if (!Number.isInteger(price) || price <= 0) {
@@ -204,7 +204,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/akun/:id/lock", requireAuth, (req, res) => {
+  router.post("/akun/:id/lock", requireUser, (req, res) => {
     withAccount(req, res, async (account, server) => {
       try {
         await vpnApi.lockAccount(server, account.protocol, account.username);
@@ -218,7 +218,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/akun/:id/unlock", requireAuth, (req, res) => {
+  router.post("/akun/:id/unlock", requireUser, (req, res) => {
     withAccount(req, res, async (account, server) => {
       if (account.status === "admin_locked") {
         return redirectErr(
@@ -243,7 +243,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/akun/:id/delete", requireAuth, (req, res) => {
+  router.post("/akun/:id/delete", requireUser, (req, res) => {
     withAccount(req, res, async (account, server) => {
       try {
         await vpnApi.deleteAccount(server, account.protocol, account.username);
@@ -257,7 +257,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/akun/:id/refresh", requireAuth, (req, res) => {
+  router.post("/akun/:id/refresh", requireUser, (req, res) => {
     withAccount(req, res, async (account, server) => {
       try {
         const cfg = await vpnApi.checkConfig(
@@ -276,7 +276,7 @@ module.exports = (db) => {
     });
   });
 
-  router.get("/akun/:id/config", requireAuth, (req, res) => {
+  router.get("/akun/:id/config", requireUser, (req, res) => {
     withAccount(req, res, (account) => {
       res.render("akun-config", {
         title: "Config Siap Pakai",
@@ -287,7 +287,7 @@ module.exports = (db) => {
     });
   });
 
-  router.get("/akun/:id/config/:templateId", requireAuth, (req, res) => {
+  router.get("/akun/:id/config/:templateId", requireUser, (req, res) => {
     withAccount(req, res, (account) => {
       const template = getTemplate.get(req.params.templateId);
       if (!template) return res.status(404).render("404", { title: "Tidak ditemukan" });

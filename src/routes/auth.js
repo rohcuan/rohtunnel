@@ -13,8 +13,11 @@ module.exports = (db) => {
     "SELECT * FROM users WHERE username = ?"
   );
 
+  const redirectHome = (req, res) =>
+    res.redirect(req.user && req.user.is_admin ? "/admin" : "/dashboard");
+
   router.get("/register", (req, res) => {
-    if (req.user) return res.redirect("/dashboard");
+    if (req.user) return redirectHome(req, res);
     res.render("register", { title: "Daftar", error: null });
   });
 
@@ -54,7 +57,7 @@ module.exports = (db) => {
   });
 
   router.get("/login", (req, res) => {
-    if (req.user) return res.redirect("/dashboard");
+    if (req.user) return redirectHome(req, res);
     res.render("login", { title: "Masuk", error: null });
   });
 
@@ -67,6 +70,14 @@ module.exports = (db) => {
       return res
         .status(401)
         .render("login", { title: "Masuk", error: "Username atau password salah" });
+    }
+    if (user.is_admin) {
+      return res
+        .status(403)
+        .render("login", {
+          title: "Masuk",
+          error: "Akun admin masuk lewat halaman Login Admin",
+        });
     }
 
     createSession(db, user.id, res);

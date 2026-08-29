@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-const { requireAuth } = require("../middleware/auth");
+const { requireUser } = require("../middleware/auth");
 const qris = require("../services/qris");
 const { checkAndSettle } = require("../jobs/paymentWatcher");
 
@@ -19,7 +19,7 @@ module.exports = (db) => {
     "SELECT * FROM topups WHERE id = ? AND user_id = ?"
   );
 
-  router.get("/topup", requireAuth, (req, res) => {
+  router.get("/topup", requireUser, (req, res) => {
     res.render("topup", {
       title: "Topup Saldo",
       user: req.user,
@@ -28,7 +28,7 @@ module.exports = (db) => {
     });
   });
 
-  router.post("/topup", requireAuth, async (req, res) => {
+  router.post("/topup", requireUser, async (req, res) => {
     const renderError = (error, status = 400) =>
       res.status(status).render("topup", {
         title: "Topup Saldo",
@@ -75,14 +75,14 @@ module.exports = (db) => {
     }
   });
 
-  router.get("/topup/check/:id", requireAuth, async (req, res) => {
+  router.get("/topup/check/:id", requireUser, async (req, res) => {
     const t = getTopup.get(req.params.id, req.user.id);
     if (!t) return res.status(404).json({ status: "notfound" });
     const result = await checkAndSettle(db, t);
     res.json(result);
   });
 
-  router.get("/topup/:id", requireAuth, (req, res) => {
+  router.get("/topup/:id", requireUser, (req, res) => {
     const t = getTopup.get(req.params.id, req.user.id);
     if (!t) return res.status(404).render("404", { title: "Tidak ditemukan" });
     res.render("topup-qr", { title: "Pembayaran Topup", user: req.user, topup: t });

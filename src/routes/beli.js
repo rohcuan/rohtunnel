@@ -2,7 +2,7 @@
 
 const express = require("express");
 const crypto = require("crypto");
-const { requireAuth } = require("../middleware/auth");
+const { requireUser } = require("../middleware/auth");
 const vpnApi = require("../services/vpnApi");
 const { parseAccountConfig } = require("../services/configBuilder");
 const notifier = require("../services/notifier");
@@ -41,11 +41,11 @@ module.exports = (db) => {
       error,
     });
 
-  router.get("/beli", requireAuth, (req, res) => {
+  router.get("/beli", requireUser, (req, res) => {
     renderBeli(req, res, null);
   });
 
-  router.post("/beli", requireAuth, async (req, res) => {
+  router.post("/beli", requireUser, async (req, res) => {
     const serverId = parseInt(req.body.server_id, 10);
     const protocol = (req.body.protocol || "").trim();
     const packageId = parseInt(req.body.package_id, 10);
@@ -182,7 +182,7 @@ module.exports = (db) => {
     res.redirect(`/beli/hasil/${accountId}`);
   });
 
-  router.get("/beli/hasil/:id", requireAuth, (req, res) => {
+  router.get("/beli/hasil/:id", requireUser, (req, res) => {
     const account = getAccount.get(req.params.id, req.user.id);
     if (!account) return res.status(404).render("404", { title: "Tidak ditemukan" });
     res.render("beli-hasil", {
