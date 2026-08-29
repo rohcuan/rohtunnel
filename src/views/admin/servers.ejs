@@ -56,8 +56,8 @@
         <div class="card server-list-card <%= editing && editing.id == s.id ? 'server-list-card-edit' : '' %>">
           <div class="server-card-head">
             <div class="server-card-title">
-              <span class="badge badge-country"><%= s.code %></span>
               <strong class="server-card-label"><%= s.label %></strong>
+              <span class="badge badge-country"><%= s.code %></span>
               <span class="badge badge-country"><%= s.country.toUpperCase() %></span>
             </div>
             <div class="server-card-actions">

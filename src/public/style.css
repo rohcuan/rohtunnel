@@ -610,22 +610,20 @@ body.login-page {
 .server-card-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   margin-top: 14px;
 }
 .server-card-info {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f8fafc;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 8px 12px;
+  padding: 8px 0;
   min-width: 0;
+  border-bottom: 1px solid var(--border-light);
 }
+.server-card-info:last-child { border-bottom: none; }
 .server-card-info-label {
   flex: 0 0 130px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   font-weight: 600;
   text-transform: uppercase;
