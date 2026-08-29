@@ -7,7 +7,7 @@ Dokumen teknis cara menjalankan aplikasi secara lokal. Untuk deployment produksi
 1. Buat repo GitHub publik (contoh: github.com/rohcuan/rohtunnel, branch `main`).
 2. Paste `docker-stack.yml` di Portainer → Stacks → Add stack → Deploy. Ubah `APP_REPO`/`APP_BRANCH`/port bila perlu.
 3. Setelah berjalan, repo boleh diprivat kembali — source & node_modules sudah tersimpan di container, data di volume `rohtunnel-data` (`/app/data`).
-4. Admin pertama: username `admin`, password random dicetak SEKALI di container logs.
+4. Admin pertama: username `admin`, password `admin` (UBAH SEGERA setelah masuk). Bisa dioverride dengan env `ADMIN_USERNAME`/`ADMIN_PASSWORD`.
 
 Detail `entrypoint.sh`:
 - Unduh source: `$APP_REPO/archive/refs/heads/$APP_BRANCH.tar.gz` via node fetch (tanpa curl/wget di image).
@@ -53,10 +53,10 @@ npm start            # atau PORT=3000 npm start
 1. Migrasi SQL di `src/migrations/` diterapkan otomatis (tabel `schema_migrations` mencatat versi).
 2. Admin pertama dibuat jika belum ada admin:
    - username: `admin` (bisa dioverride env `ADMIN_USERNAME`)
-   - password: **random 12 karakter, dicetak SEKALI di console/log** — salin sebelum hilang.
-     Di docker/Portainer ambil dari container logs.
-   - Bisa dioverride dengan env `ADMIN_PASSWORD` bila ingin password tetap.
+   - password: `admin` (bisa dioverride env `ADMIN_PASSWORD`) — **wajib diganti segera**.
 3. Settings default di-seed ke tabel `settings` (hanya jika key belum ada).
+
+Catatan container: `entrypoint.sh` meng-export `DB_PATH` & `BACKUP_DIR` ke `DATA_DIR` (volume) agar database & backup persist di luar source app.
 
 ## Verifikasi cepat (curl)
 

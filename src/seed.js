@@ -1,6 +1,5 @@
 "use strict";
 
-const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 
 const DEFAULT_SETTINGS = {
@@ -112,29 +111,14 @@ function ensureSeed(db) {
 
   if (adminCount === 0) {
     const username = process.env.ADMIN_USERNAME || "admin";
-    let password = process.env.ADMIN_PASSWORD;
-    let generated = false;
-
-    if (!password) {
-      password = crypto.randomBytes(9).toString("base64url");
-      generated = true;
-    }
+    const password = process.env.ADMIN_PASSWORD || "admin";
 
     const hash = bcrypt.hashSync(password, 10);
     db.prepare(
       "INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, 1)"
     ).run(username, hash);
 
-    if (generated) {
-      console.log("==============================================");
-      console.log("  ADMIN PERTAMA DIBUAT (first run)");
-      console.log(`  username : ${username}`);
-      console.log(`  password : ${password}`);
-      console.log("  SALIN & SIMPAN! Password tidak akan ditampilkan lagi.");
-      console.log("==============================================");
-    } else {
-      console.log(`[seed] admin dibuat dari env: ${username}`);
-    }
+    console.log(`[seed] admin dibuat: ${username} / ${password} — segera ganti password!`);
   }
 
   const insert = db.prepare(

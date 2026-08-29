@@ -1,5 +1,14 @@
 # Bug Fixed
 
+## BUG-004: DB_PATH tidak mengarah ke volume DATA_DIR di container
+
+**Ditemukan:** 29 Agustus 2026 (test real GitHub via podman)
+**Diperbaiki:** 29 Agustus 2026
+
+**Perbaikan:** `entrypoint.sh` export `DB_PATH`/`BACKUP_DIR` ke `DATA_DIR` (volume); `adminSetup.js` pakai `path.dirname(DB_PATH)`.
+
+**Verifikasi:** Container `rohtunnel-dev` restart → DB benar di `/app/data` (volume `rohtunnel-dev-data`), landing 200, login admin OK.
+
 ## BUG-003: entrypoint salah extract tarball GitHub
 
 **Ditemukan:** 29 Agustus 2026 (test real GitHub via podman)

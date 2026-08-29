@@ -1,5 +1,11 @@
 # Progress
 
+## Default Admin admin/admin + BUG-004 (29 Agustus 2026)
+
+- [x] Seed admin pertama: username `admin`, password `admin` (override via env `ADMIN_USERNAME`/`ADMIN_PASSWORD`), pesan log "segera ganti password"
+- [x] **BUG-004** ditemukan & diperbaiki: `DB_PATH` di container mengarah ke `/app/app/data` (bukan volume `/app/data`) → entrypoint export `DB_PATH`/`BACKUP_DIR`; `adminSetup.js` pakai `path.dirname(DB_PATH)`
+- [x] Container dev `rohtunnel-dev` diperbaiki: DB dipindah ke volume, admin login `admin/admin` terverifikasi (password lama 401)
+
 ## Test Real GitHub — SELESAI (29 Agustus 2026)
 
 - [x] Repo **github.com/rohcuan/rohtunnel dibuat PUBLIC** untuk testing (user akan privatkan kembali setelah deploy produksi)
