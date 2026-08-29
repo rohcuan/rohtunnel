@@ -7,37 +7,42 @@
   <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
 
   <div class="card">
-    <h3>Tambah Server</h3>
-    <form method="post" action="/admin/servers/add">
+    <h3><%= editing ? 'Edit Server: ' + editing.code + ' · ' + editing.label : 'Tambah Server' %></h3>
+    <form method="post" action="<%= editing ? '/admin/servers/' + editing.id + '/edit' : '/admin/servers/add' %>">
       <div class="row">
         <label>Kode Server
-          <input type="text" name="code" placeholder="Contoh: SRV-A" required maxlength="20" pattern="[A-Za-z0-9-]+" title="Huruf besar, angka, atau -" style="text-transform:uppercase">
+          <input type="text" name="code" placeholder="Contoh: SRV-A" required maxlength="20" pattern="[A-Za-z0-9-]+" title="Huruf besar, angka, atau -" style="text-transform:uppercase" value="<%= values.code %>">
         </label>
         <label>Label
-          <input type="text" name="label" placeholder="Contoh: LinkGo Metro Teknologi" required maxlength="100">
+          <input type="text" name="label" placeholder="Contoh: LinkGo Metro Teknologi" required maxlength="100" value="<%= values.label %>">
         </label>
         <label>Endpoint API
-          <input type="url" name="endpoint" placeholder="https://rohserver1.dpdns.org" required>
+          <input type="url" name="endpoint" placeholder="https://rohserver1.dpdns.org" required value="<%= values.endpoint %>">
         </label>
         <p class="muted form-hint">Tanpa /vps — path /vps otomatis ditambahkan aplikasi.</p>
         <label>API Key
-          <input type="password" name="api_key" placeholder="Bearer token" required>
+          <input type="password" name="api_key" placeholder="Bearer token" required value="<%= values.api_key %>">
         </label>
       </div>
       <div class="row">
         <label>Country
           <select name="country">
-            <option value="id">Indonesia</option>
-            <option value="sg">Singapore</option>
-            <option value="us">USA</option>
+            <option value="id" <%= values.country === 'id' ? 'selected' : '' %>>Indonesia</option>
+            <option value="sg" <%= values.country === 'sg' ? 'selected' : '' %>>Singapore</option>
+            <option value="us" <%= values.country === 'us' ? 'selected' : '' %>>USA</option>
           </select>
         </label>
         <label>Limit Jumlah VPN (0 = tanpa batas)
-          <input type="number" name="limit_vpn" min="0" value="0" required>
+          <input type="number" name="limit_vpn" min="0" value="<%= values.limit_vpn %>" required>
         </label>
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Simpan Server</button>
+        <% if (editing) { %>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+          <a href="/admin/servers" class="btn btn-outline">Batal</a>
+        <% } else { %>
+          <button type="submit" class="btn btn-primary">Simpan Server</button>
+        <% } %>
       </div>
     </form>
   </div>
@@ -64,6 +69,7 @@
               <td class="cell-mono"><%= s.api_key.slice(0, 6) %>...</td>
               <td><%= s.limit_vpn === 0 ? 'Tak terbatas' : s.limit_vpn %></td>
               <td class="cell-actions">
+                <a href="/admin/servers?edit=<%= s.id %>" class="btn btn-outline btn-sm">Edit</a>
                 <a href="/admin/servers/<%= s.id %>/packages" class="btn btn-outline btn-sm">Pricing</a>
                 <form method="post" action="/admin/servers/<%= s.id %>/delete" class="inline-form"
                       onsubmit="return confirm('Hapus server <%= s.code %> — <%= s.label %> beserta semua package-nya?');">

@@ -20,56 +20,94 @@ module.exports = (db) => {
 
   // ============ Servers ============
 
-  router.get("/admin/servers", requireAdmin, (req, res) => {
-    res.render("admin/servers", {
+  const validateServer = (input) => {
+    const code = (input.code || "").trim().toUpperCase();
+    const label = (input.label || "").trim();
+    const endpoint = (input.endpoint || "").trim();
+    const apiKey = (input.api_key || "").trim();
+    const country = (input.country || "").trim();
+    const limitVpn = parseInt(input.limit_vpn, 10);
+    const data = { code, label, endpoint, apiKey, country, limitVpn };
+
+    if (!CODE_RE.test(code)) {
+      return { error: "Kode server wajib 2-20 karakter (huruf besar, angka, -)", data };
+    }
+    if (!label || label.length > 100) {
+      return { error: "Label server wajib diisi (maks 100 karakter)", data };
+    }
+    if (!/^https?:\/\/.+/i.test(endpoint)) {
+      return { error: "Endpoint harus diawali http:// atau https://", data };
+    }
+    if (!apiKey) {
+      return { error: "API key server wajib diisi", data };
+    }
+    if (!COUNTRIES.includes(country)) {
+      return { error: "Country harus salah satu: id, sg, us", data };
+    }
+    if (!Number.isInteger(limitVpn) || limitVpn < 0) {
+      return { error: "Limit VPN harus angka >= 0 (0 = tanpa batas)", data };
+    }
+    return { data };
+  };
+
+  const serverForm = (res, req, servers, editing, error) => {
+    const formData = (editing && editing.formData) || {};
+    const values = {
+      code: formData.code !== undefined ? formData.code : (editing ? editing.code : ""),
+      label: formData.label !== undefined ? formData.label : (editing ? editing.label : ""),
+      endpoint: formData.endpoint !== undefined ? formData.endpoint : (editing ? editing.endpoint : ""),
+      api_key: formData.api_key !== undefined ? formData.api_key : (editing ? editing.api_key : ""),
+      country: formData.country !== undefined ? formData.country : (editing ? editing.country : "id"),
+      limit_vpn: formData.limit_vpn !== undefined ? formData.limit_vpn : (editing ? editing.limit_vpn : "0"),
+    };
+    res.status(error ? 400 : 200).render("admin/servers", {
       title: "Manage Server",
       user: req.user,
-      servers: listServers.all(),
-      error: null,
+      servers,
+      editing: editing ? editing : null,
+      values,
+      error,
     });
+  };
+
+  router.get("/admin/servers", requireAdmin, (req, res) => {
+    const editId = parseInt(req.query.edit, 10);
+    const editing = Number.isInteger(editId) ? getServer.get(editId) : null;
+    serverForm(res, req, listServers.all(), editing, null);
   });
 
   router.post("/admin/servers/add", requireAdmin, (req, res) => {
-    const code = (req.body.code || "").trim().toUpperCase();
-    const label = (req.body.label || "").trim();
-    const endpoint = (req.body.endpoint || "").trim();
-    const apiKey = (req.body.api_key || "").trim();
-    const country = (req.body.country || "").trim();
-    const limitVpn = parseInt(req.body.limit_vpn, 10);
-
-    const renderError = (error) =>
-      res.status(400).render("admin/servers", {
-        title: "Manage Server",
-        user: req.user,
-        servers: listServers.all(),
-        error,
-      });
-
-    if (!CODE_RE.test(code)) {
-      return renderError("Kode server wajib 2-20 karakter (huruf besar, angka, -)");
+    const { error, data } = validateServer(req.body);
+    if (error) {
+      return serverForm(res, req, listServers.all(), { formData: req.body }, error);
     }
-    if (getServerByCode.get(code)) {
-      return renderError(`Kode server ${code} sudah dipakai`);
-    }
-    if (!label || label.length > 100) {
-      return renderError("Label server wajib diisi (maks 100 karakter)");
-    }
-    if (!/^https?:\/\/.+/i.test(endpoint)) {
-      return renderError("Endpoint harus diawali http:// atau https://");
-    }
-    if (!apiKey) {
-      return renderError("API key server wajib diisi");
-    }
-    if (!COUNTRIES.includes(country)) {
-      return renderError("Country harus salah satu: id, sg, us");
-    }
-    if (!Number.isInteger(limitVpn) || limitVpn < 0) {
-      return renderError("Limit VPN harus angka >= 0 (0 = tanpa batas)");
+    if (getServerByCode.get(data.code)) {
+      return serverForm(res, req, listServers.all(), { formData: req.body }, `Kode server ${data.code} sudah dipakai`);
     }
 
     db.prepare(
       "INSERT INTO servers (code, label, endpoint, api_key, country, limit_vpn) VALUES (?, ?, ?, ?, ?, ?)"
-    ).run(code, label, endpoint, apiKey, country, limitVpn);
+    ).run(data.code, data.label, data.endpoint, data.apiKey, data.country, data.limitVpn);
+
+    res.redirect("/admin/servers");
+  });
+
+  router.post("/admin/servers/:id/edit", requireAdmin, (req, res) => {
+    const server = getServer.get(req.params.id);
+    if (!server) return res.status(404).render("404", { title: "Tidak ditemukan" });
+
+    const { error, data } = validateServer(req.body);
+    if (error) {
+      return serverForm(res, req, listServers.all(), { id: server.id, formData: req.body }, error);
+    }
+    const dup = getServerByCode.get(data.code);
+    if (dup && dup.id !== server.id) {
+      return serverForm(res, req, listServers.all(), { id: server.id, formData: req.body }, `Kode server ${data.code} sudah dipakai`);
+    }
+
+    db.prepare(
+      "UPDATE servers SET code = ?, label = ?, endpoint = ?, api_key = ?, country = ?, limit_vpn = ? WHERE id = ?"
+    ).run(data.code, data.label, data.endpoint, data.apiKey, data.country, data.limitVpn, server.id);
 
     res.redirect("/admin/servers");
   });

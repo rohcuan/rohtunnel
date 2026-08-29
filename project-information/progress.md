@@ -1,5 +1,12 @@
 # Progress
 
+## Admin: Edit Server — SELESAI (29 Agustus 2026)
+
+- [x] Tombol **Edit** di list server → `/admin/servers?edit=<id>`: form sama berubah jadi mode edit (judul "Edit Server", aksi `/admin/servers/:id/edit`, tombol Simpan Perubahan + Batal), semua field terisi (code, label, endpoint, api_key, country, limit_vpn)
+- [x] Validasi sama dengan tambah; cek duplikat kode **mengecualikan server itu sendiri**; 404 jika id tidak ada
+- [x] Re-render error mempertahankan mode edit + nilai yang diisi
+- [x] Verifikasi lokal: edit sukses (semua field berubah), dup code ditolak/diizinkan sesuai milik sendiri, error re-render, 404
+
 ## Server: Kode + Label & Grid Bendera di Beli VPN — SELESAI (29 Agustus 2026)
 
 - [x] Migrasi `009_server_code_label.sql`: `servers.name` di-rename ke `label`, kolom `code` (unique index); row lama di-backfill `code = 'SRV-' || id`
