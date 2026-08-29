@@ -40,9 +40,16 @@ if [ "$need_download" = true ]; then
   rm -rf /tmp/appsrc
   mkdir -p /tmp/appsrc
   tar -xzf /tmp/app.tar.gz -C /tmp/appsrc
+  # GitHub tarball berisi folder tunggal "repo-branch/"; handle juga tarball root "./"
+  sub=$(ls -A /tmp/appsrc)
+  if [ -n "$sub" ] && [ "$(echo "$sub" | wc -l)" = "1" ] && [ -d "/tmp/appsrc/$sub" ]; then
+    SRC="/tmp/appsrc/$sub"
+  else
+    SRC="/tmp/appsrc"
+  fi
   rm -rf "$APP_DIR"
   mkdir -p "$APP_DIR"
-  cp -a /tmp/appsrc/. "$APP_DIR/"
+  cp -a "$SRC/." "$APP_DIR/"
   rm -rf /tmp/app.tar.gz /tmp/appsrc
   echo "$BRANCH" > "$VERSION_MARKER"
   log "source siap"
