@@ -1,0 +1,41 @@
+version: "3.8"
+
+# RohTunnel — 1-click install di Portainer (docker swarm)
+#
+# Cara pakai:
+# 1. Pastikan repo publik saat install (github.com/rohcuan/rohtunnel)
+# 2. Paste file ini di Portainer -> Stacks -> Add stack -> Deploy
+# 3. Setelah berhasil, repo boleh dibuat privat lagi (data sudah aman di volume)
+#
+# Entrypoint (diunduh dari repo) yang melakukan semuanya:
+#   - unduh source app dari repo (hanya sekali, marker versi)
+#   - npm install (hanya sekali, marker)
+#   - start app
+# Konfigurasi & secret di-set lewat admin UI (tersimpan di database), bukan .env.
+
+services:
+  rohtunnel:
+    image: node:20-slim
+    hostname: rohtunnel
+    restart: unless-stopped
+    environment:
+      APP_REPO: "https://github.com/rohcuan/rohtunnel"
+      APP_BRANCH: "main"
+      PORT: "3000"
+      TZ: "Asia/Jakarta"
+    volumes:
+      - rohtunnel-data:/app/data
+    ports:
+      - "8080:3000"
+    command:
+      - sh
+      - -c
+      - >
+        node -e "fetch(process.env.APP_REPO + '/raw/' + process.env.APP_BRANCH + '/entrypoint.sh')
+        .then(r => { if (!r.ok) { console.error('entrypoint download gagal: HTTP ' + r.status); process.exit(1); }
+        return r.arrayBuffer(); })
+        .then(b => require('fs').writeFileSync('/tmp/entrypoint.sh', Buffer.from(b)))"
+        && sh /tmp/entrypoint.sh
+
+volumes:
+  rohtunnel-data:
