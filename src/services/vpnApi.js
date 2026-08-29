@@ -10,7 +10,10 @@ const TYPE_SUFFIX = {
 const TIMEOUT_MS = 15000;
 
 async function apiCall(server, method, path, body) {
-  const base = (server.endpoint || "").replace(/\/+$/, "");
+  let base = (server.endpoint || "").replace(/\/+$/, "");
+  if (base.endsWith("/vps") && path.startsWith("/vps")) {
+    base = base.slice(0, -4);
+  }
   const res = await fetch(`${base}${path}`, {
     method,
     headers: {
