@@ -1,5 +1,17 @@
 # Bug Found
 
+## BUG-005: endpoint Potato API dobel /vps (29 Agustus 2026)
+
+**Status:** FIXED (lihat bug-fixed.md)
+
+**Gejala:** Beli VPN real → `HTTP 404 (respon bukan JSON)`.
+
+**Akar masalah:** Admin memasukkan endpoint `http://rohserver1.dpdns.org/vps` (base docs swagger). App menambahkan path `/vps/vlessall` → `http://rohserver1.dpdns.org/vps/vps/vlessall` → 404. API asli: host tanpa `/vps` (path swagger sudah termasuk `/vps`).
+
+**Perbaikan:** `vpnApi.js` — normalisasi: jika `endpoint` diakhiri `/vps` dan `path` diawali `/vps`, strip akhiran `/vps` dari base. Berfungsi untuk kedua gaya konfigurasi.
+
+**Verifikasi:** Create akun real sukses (`realuser1` @ rohserver1), checkconfig OK, semua aksi manage (renew/add-ip/lock/unlock) OK.
+
 ## BUG-004: DB_PATH tidak mengarah ke volume DATA_DIR di container (29 Agustus 2026)
 
 **Status:** FIXED (lihat bug-fixed.md)

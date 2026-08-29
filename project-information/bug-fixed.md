@@ -1,5 +1,14 @@
 # Bug Fixed
 
+## BUG-005: endpoint Potato API dobel /vps
+
+**Ditemukan:** 29 Agustus 2026 (test real GitHub via podman)
+**Diperbaiki:** 29 Agustus 2026
+
+**Perbaikan:** `src/services/vpnApi.js` — strip `/vps` trailing dari endpoint bila path sudah diawali `/vps`.
+
+**Verifikasi:** Beli vless real (realuser1, 200GB/3IP/30hari, Rp7.000) sukses; saldo 100.000→93.000; refresh config OK; renew (+30 hari), add-ip (3→4), lock/unlock OK; saldo akhir 79.000.
+
 ## BUG-004: DB_PATH tidak mengarah ke volume DATA_DIR di container
 
 **Ditemukan:** 29 Agustus 2026 (test real GitHub via podman)

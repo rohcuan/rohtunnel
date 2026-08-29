@@ -1,5 +1,16 @@
 # Progress
 
+## Test Real Potato API — SELESAI (29 Agustus 2026)
+
+- [x] Konfigurasi user: server ID1 (rohserver1.dpdns.org/vps, key valid), package vless 200GB/3IP/30hari Rp7.000
+- [x] **BUG-005** ditemukan & diperbaiki: endpoint `/vps` dobel (swagger path sudah termasuk /vps) → normalisasi di `vpnApi.js`
+- [x] Alur beli real: user realuser1 (saldo diset 100.000) → beli vless → **akun `realuser1` dibuat di server asli** (uuid server-generated), saldo 93.000, transaksi tercatat
+- [x] Halaman hasil: link vless:// (tls/none/grpc/up), hostname, port, uuid real
+- [x] Config siap pakai (XL Edu) ter-render data real tanpa placeholder
+- [x] Refresh config (checkconfig server) OK
+- [x] Manage real: renew (+30 hari, expired 2026-09-28→10-28), add-ip (3→4), lock/unlock — saldo akhir 79.000
+- [x] Akun `realuser1` dibiarkan aktif di server untuk dicek user
+
 ## Default Admin admin/admin + BUG-004 (29 Agustus 2026)
 
 - [x] Seed admin pertama: username `admin`, password `admin` (override via env `ADMIN_USERNAME`/`ADMIN_PASSWORD`), pesan log "segera ganti password"
