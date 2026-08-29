@@ -10,8 +10,11 @@
     <h3>Tambah Server</h3>
     <form method="post" action="/admin/servers/add">
       <div class="row">
-        <label>Nama Server
-          <input type="text" name="name" placeholder="Contoh: SG-1" required maxlength="50">
+        <label>Kode Server
+          <input type="text" name="code" placeholder="Contoh: SRV-A" required maxlength="20" pattern="[A-Za-z0-9-]+" title="Huruf besar, angka, atau -" style="text-transform:uppercase">
+        </label>
+        <label>Label
+          <input type="text" name="label" placeholder="Contoh: LinkGo Metro Teknologi" required maxlength="100">
         </label>
         <label>Endpoint API
           <input type="url" name="endpoint" placeholder="https://rohserver1.dpdns.org" required>
@@ -47,14 +50,15 @@
       <div class="table-wrap"><table class="table">
         <thead>
           <tr>
-            <th>Nama</th><th>Country</th><th>Endpoint</th><th>API Key</th>
+            <th>Kode</th><th>Label</th><th>Country</th><th>Endpoint</th><th>API Key</th>
             <th>Limit VPN</th><th>Aksi</th>
           </tr>
         </thead>
         <tbody>
           <% servers.forEach(s => { %>
             <tr>
-              <td><strong><%= s.name %></strong></td>
+              <td><span class="badge badge-country"><%= s.code %></span></td>
+              <td><strong><%= s.label %></strong></td>
               <td><span class="badge badge-country"><%= s.country.toUpperCase() %></span></td>
               <td class="cell-mono"><%= s.endpoint %></td>
               <td class="cell-mono"><%= s.api_key.slice(0, 6) %>...</td>
@@ -62,7 +66,7 @@
               <td class="cell-actions">
                 <a href="/admin/servers/<%= s.id %>/packages" class="btn btn-outline btn-sm">Pricing</a>
                 <form method="post" action="/admin/servers/<%= s.id %>/delete" class="inline-form"
-                      onsubmit="return confirm('Hapus server <%= s.name %> beserta semua package-nya?');">
+                      onsubmit="return confirm('Hapus server <%= s.code %> — <%= s.label %> beserta semua package-nya?');">
                   <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                 </form>
               </td>

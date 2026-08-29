@@ -531,6 +531,53 @@ body.login-page {
 .empty-state { text-align: center; padding: 40px 20px; color: #999; font-size: 14px; }
 .footer-text { text-align: center; font-size: 12px; color: #999; padding: 20px; }
 
+/* ============ Server picker (beli) ============ */
+.server-picker { width: 100%; }
+.filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+.chip-active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.chip-active:hover { color: #fff; }
+.server-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (max-width: 640px) {
+  .server-grid { grid-template-columns: 1fr; }
+}
+.server-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.server-card:hover { border-color: var(--primary); }
+.server-card.hidden { display: none; }
+.server-card input { position: absolute; opacity: 0; }
+.server-card.selected {
+  border-color: var(--primary);
+  background: #f5f7ff;
+  box-shadow: 0 0 0 3px rgba(67,97,238,0.1);
+}
+.server-flag { font-size: 32px; line-height: 1; flex: 0 0 auto; }
+.server-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.server-name { display: flex; align-items: center; gap: 8px; }
+.server-country { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
+.server-label { font-weight: 600; font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 /* ============ Footer ============ */
 .site-footer {
   border-top: 1px solid var(--border-light);

@@ -72,7 +72,7 @@ rohtunnel/
 | Tabel | Kolom penting |
 |---|---|
 | `users` | id, username (a-z0-9 lowercase, 3-20), email (unique), password_hash, saldo (integer, satuan rupiah), is_admin, created_at |
-| `servers` | id, name, endpoint (base url), api_key (token), country (id/sg/us), limit_vpn, note |
+| `servers` | id, code (unique, mis. SRV-A), label (mis. LinkGo Metro Teknologi), endpoint (base url), api_key (token), country (id/sg/us), limit_vpn, note |
 | `packages` | id, server_id, protocol (ssh/vmess/vless/trojan), name, price, kuota_gb, limit_ip, days, active |
 | `vpn_accounts` | id, user_id, server_id, protocol, username, uuid/password, kuota_gb, limit_ip, expired_at, status (active/locked/admin_locked), created_at |
 | `topups` | id, user_id, amount, trx_id (QRIS), status (pending/paid), created_at |

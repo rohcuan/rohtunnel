@@ -20,7 +20,7 @@ module.exports = (db) => {
     "SELECT * FROM users WHERE id = ? AND is_admin = 0"
   );
   const listUserAccounts = db.prepare(`
-    SELECT a.*, s.name AS server_name, s.country AS server_country
+    SELECT a.*, s.label AS server_name, s.country AS server_country
     FROM vpn_accounts a JOIN servers s ON s.id = a.server_id
     WHERE a.user_id = ? AND a.status != 'deleted'
       AND (? = '' OR a.protocol = ?)

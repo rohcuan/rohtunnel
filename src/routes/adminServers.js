@@ -5,12 +5,14 @@ const { requireAdmin } = require("../middleware/admin");
 
 const PROTOCOLS = ["ssh", "vmess", "vless", "trojan"];
 const COUNTRIES = ["id", "sg", "us"];
+const CODE_RE = /^[A-Z0-9-]{2,20}$/;
 
 module.exports = (db) => {
   const router = express.Router();
 
   const getServer = db.prepare("SELECT * FROM servers WHERE id = ?");
   const listServers = db.prepare("SELECT * FROM servers ORDER BY id");
+  const getServerByCode = db.prepare("SELECT id FROM servers WHERE code = ?");
   const listPackages = db.prepare(
     "SELECT * FROM packages WHERE server_id = ? AND protocol = ? ORDER BY id"
   );
@@ -28,7 +30,8 @@ module.exports = (db) => {
   });
 
   router.post("/admin/servers/add", requireAdmin, (req, res) => {
-    const name = (req.body.name || "").trim();
+    const code = (req.body.code || "").trim().toUpperCase();
+    const label = (req.body.label || "").trim();
     const endpoint = (req.body.endpoint || "").trim();
     const apiKey = (req.body.api_key || "").trim();
     const country = (req.body.country || "").trim();
@@ -42,8 +45,14 @@ module.exports = (db) => {
         error,
       });
 
-    if (!name || name.length > 50) {
-      return renderError("Nama server wajib diisi (maks 50 karakter)");
+    if (!CODE_RE.test(code)) {
+      return renderError("Kode server wajib 2-20 karakter (huruf besar, angka, -)");
+    }
+    if (getServerByCode.get(code)) {
+      return renderError(`Kode server ${code} sudah dipakai`);
+    }
+    if (!label || label.length > 100) {
+      return renderError("Label server wajib diisi (maks 100 karakter)");
     }
     if (!/^https?:\/\/.+/i.test(endpoint)) {
       return renderError("Endpoint harus diawali http:// atau https://");
@@ -59,8 +68,8 @@ module.exports = (db) => {
     }
 
     db.prepare(
-      "INSERT INTO servers (name, endpoint, api_key, country, limit_vpn) VALUES (?, ?, ?, ?, ?)"
-    ).run(name, endpoint, apiKey, country, limitVpn);
+      "INSERT INTO servers (code, label, endpoint, api_key, country, limit_vpn) VALUES (?, ?, ?, ?, ?, ?)"
+    ).run(code, label, endpoint, apiKey, country, limitVpn);
 
     res.redirect("/admin/servers");
   });

@@ -39,7 +39,7 @@ module.exports = (db) => {
 
     const accounts = db
       .prepare(
-        `SELECT a.*, s.name AS server_name, s.country AS server_country, u.username AS owner_name
+        `SELECT a.*, s.label AS server_name, s.country AS server_country, u.username AS owner_name
          FROM vpn_accounts a
          JOIN servers s ON s.id = a.server_id
          JOIN users u ON u.id = a.user_id

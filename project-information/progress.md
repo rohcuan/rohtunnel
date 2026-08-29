@@ -1,5 +1,14 @@
 # Progress
 
+## Server: Kode + Label & Grid Bendera di Beli VPN — SELESAI (29 Agustus 2026)
+
+- [x] Migrasi `009_server_code_label.sql`: `servers.name` di-rename ke `label`, kolom `code` (unique index); row lama di-backfill `code = 'SRV-' || id`
+- [x] Form tambah server: field **Kode Server** (validasi `^[A-Z0-9-]{2,20}$`, otomatis uppercase, unik) + **Label** (maks 100) menggantikan Nama Server
+- [x] List server admin: kolom Kode + Label; halaman pricing: `SRV-A · LinkGo Metro Teknologi`; filter server admin akun: `code · label`
+- [x] Halaman Beli VPN: pemilihan server jadi **grid 2 kolom kartu bendera** (emoji 🇮🇩🇸🇬🇺🇸 + badge kode + label) + filter chip negara (Semua/Indonesia/Singapore/USA); radio kartu state aktif indigo; package refresh per server terpilih
+- [x] Semua join `s.name AS server_name` → `s.label` (akun, admin users/akun, recovery) + detail transaksi beli
+- [x] Verifikasi lokal: validasi kode (duplikat/bentuk), grid beli render, migrasi backfill pada skema lama (name→label, SRV-<id>)
+
 ## UI Styling RohTembak-XL — SELESAI (29 Agustus 2026)
 
 - [x] Referensi desain dibaca dari repo privat `rohcuan/rohtembak-xl` (read-only via gh): palet indigo `#4361ee` → purple `#7209b7`, bg `#f0f2f5`, kartu putih radius 12 + shadow halus, tombol/input radius 8 + focus ring `0 0 0 3px rgba(67,97,238,0.1)`, tabel header uppercase, dropdown menu navbar

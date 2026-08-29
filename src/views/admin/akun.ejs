@@ -19,7 +19,7 @@
       <select name="server_id">
         <option value="">Semua server</option>
         <% servers.forEach(s => { %>
-          <option value="<%= s.id %>" <%= filters.serverId == s.id ? 'selected' : '' %>><%= s.name %></option>
+          <option value="<%= s.id %>" <%= filters.serverId == s.id ? 'selected' : '' %>><%= s.code %> · <%= s.label %></option>
         <% }) %>
       </select>
       <select name="status">

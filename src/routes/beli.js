@@ -14,7 +14,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 module.exports = (db) => {
   const router = express.Router();
 
-  const listServers = db.prepare("SELECT * FROM servers ORDER BY country, name");
+  const listServers = db.prepare("SELECT * FROM servers ORDER BY country, label");
   const listActivePackages = db.prepare(
     "SELECT * FROM packages WHERE active = 1 ORDER BY id"
   );
@@ -159,7 +159,7 @@ module.exports = (db) => {
       ).run(
         req.user.id,
         -pkg.price,
-        `${protocol} ${pkg.name} di ${server.name}`
+        `${protocol} ${pkg.name} di ${server.label}`
       );
 
       return info.lastInsertRowid;
@@ -174,7 +174,7 @@ module.exports = (db) => {
       .purchase(
         { username: req.user.username },
         "membeli akun",
-        `${protocol} ${finalUsername} (${server.name})`,
+        `${protocol} ${finalUsername} (${server.label})`,
         pkg.price
       )
       .catch(() => {});

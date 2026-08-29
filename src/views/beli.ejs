@@ -11,20 +11,34 @@
   <% } else { %>
   <div class="card">
     <form method="post" action="/beli">
-      <div class="row">
-        <label>Pilih Server
-          <select name="server_id" id="server-select" required>
-            <% const groups = {}; %>
-            <% servers.forEach(s => { (groups[s.country] = groups[s.country] || []).push(s); }); %>
-            <% Object.keys(groups).forEach(country => { %>
-              <optgroup label="<%= country.toUpperCase() %>">
-                <% groups[country].forEach(s => { %>
-                  <option value="<%= s.id %>"><%= s.name %></option>
-                <% }) %>
-              </optgroup>
-            <% }) %>
-          </select>
-        </label>
+      <div class="server-picker">
+        <div class="filter-chips">
+          <button type="button" class="chip chip-active" data-country="">Semua</button>
+          <button type="button" class="chip" data-country="id">&#127470;&#127463; Indonesia</button>
+          <button type="button" class="chip" data-country="sg">&#127480;&#127469; Singapore</button>
+          <button type="button" class="chip" data-country="us">&#127482;&#127480; USA</button>
+        </div>
+        <div class="server-grid">
+          <% servers.forEach(s => { %>
+            <label class="server-card" data-country="<%= s.country %>">
+              <input type="radio" name="server_id" value="<%= s.id %>" required>
+              <div class="server-flag">
+                <% if (s.country === 'id') { %>&#127470;&#127463;<% } %>
+                <% if (s.country === 'sg') { %>&#127480;&#127469;<% } %>
+                <% if (s.country === 'us') { %>&#127482;&#127480;<% } %>
+              </div>
+              <div class="server-info">
+                <div class="server-name">
+                  <span class="badge badge-country"><%= s.code %></span>
+                  <span class="server-country"><%= s.country.toUpperCase() %></span>
+                </div>
+                <div class="server-label"><%= s.label %></div>
+              </div>
+            </label>
+          <% }) %>
+        </div>
+      </div>
+      <div class="row" style="margin-top:16px;">
         <label>Protocol
           <select name="protocol" id="protocol-select" required>
             <option value="ssh">SSH Tunnel</option>
@@ -56,14 +70,23 @@
 
   <script>
     const PACKAGES = <%- JSON.stringify(packages).replace(/</g, '\\u003c') %>;
-    const serverSel = document.getElementById('server-select');
     const protocolSel = document.getElementById('protocol-select');
     const packageSel = document.getElementById('package-select');
     const uuidRow = document.getElementById('uuid-row');
+    const serverRadios = Array.from(document.querySelectorAll('input[name="server_id"]'));
+
+    const getServerId = () => {
+      const checked = serverRadios.find(r => r.checked);
+      return checked ? checked.value : '';
+    };
+    const markSelected = () => {
+      document.querySelectorAll('.server-card').forEach(card =>
+        card.classList.toggle('selected', card.querySelector('input').checked));
+    };
 
     function refreshPackages() {
       const list = PACKAGES.filter(p =>
-        p.server_id == serverSel.value && p.protocol === protocolSel.value);
+        p.server_id == getServerId() && p.protocol === protocolSel.value);
       packageSel.innerHTML = '';
       if (list.length === 0) {
         const o = document.createElement('option');
@@ -84,8 +107,34 @@
       uuidRow.style.display = protocolSel.value === 'ssh' ? 'none' : 'flex';
     }
 
-    serverSel.addEventListener('change', refreshPackages);
+    serverRadios.forEach(r => r.addEventListener('change', () => {
+      markSelected();
+      refreshPackages();
+    }));
+
     protocolSel.addEventListener('change', () => { refreshPackages(); refreshUuidVisibility(); });
+
+    document.querySelectorAll('.filter-chips .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('chip-active'));
+        chip.classList.add('chip-active');
+        const country = chip.dataset.country;
+        document.querySelectorAll('.server-card').forEach(card => {
+          card.classList.toggle('hidden', !!country && card.dataset.country !== country);
+        });
+        const checked = serverRadios.find(r => r.checked);
+        if (!checked || checked.closest('.server-card').classList.contains('hidden')) {
+          const firstVisible = document.querySelector('.server-card:not(.hidden) input');
+          if (firstVisible) { firstVisible.checked = true; markSelected(); }
+        }
+        refreshPackages();
+      });
+    });
+
+    if (serverRadios.length > 0) {
+      serverRadios[0].checked = true;
+      markSelected();
+    }
     refreshPackages();
     refreshUuidVisibility();
   </script>
