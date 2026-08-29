@@ -642,6 +642,7 @@ body.login-page {
   .server-card-info { flex-direction: column; align-items: flex-start; gap: 4px; }
   .server-card-info-label { flex: none; }
   .server-card-info-value { width: 100%; }
+  .server-card-title { flex-direction: column; align-items: flex-start; gap: 6px; }
 }
 
 /* ============ Footer ============ */
