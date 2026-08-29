@@ -50,6 +50,7 @@ Sesi ini mencakup: (1) auth dengan email, (2) restyle UI mengikuti repo privat R
 - **Auth pages standalone** (login, login-admin, register): background gradien penuh + `login-card` putih (radius 16, shadow `0 10px 40px`) + subtitle + `error-msg` + **pw-toggle** (tombol mata)
 - Landing: hero jadi banner gradien; dashboard user & admin: banner gradien berisi statistik (user: saldo/akun aktif/total; admin: user/server/akun) + menu grid 2 kolom
 - **Dashboard admin dirombak imitasi `rohcuan/rohtembak-xl` (dibaca read-only)**: header `page-title` "Dashboard Admin" + `page-subtitle` "Atur semuanya disini"; kartu **Menu** dengan `.menu-grid` (2 kolom → 1 kolom ≤900px) berisi tombol `.btn-outline` full-width: Kelola User, Manage Server, Manager Akun VPN, QRIS API, Bot Telegram, Notif Bot Telegram, Auto Backup, Template Config, Restore Backup
+- **Setup Notifikasi imitasi `rohtembak-xl/notiftele.html`**: header + pill status bot `.cfg-status.on/off` (link ke Atur Bot Telegram jika belum), kartu `Notifikasi Aktif` dengan baris `.notif-item` (checkbox 18px accent primary + judul + deskripsi), tombol `Simpan Notifikasi`; route GET memberi `botConfigured` dari `telegram_bot_token`
 - `contactAdmin` dari settings dipakai di dropdown/dashboard; search field pakai ikon kaca pembesar (admin akun)
 
 ## 4. Server: Kode + Label (migrasi `009_server_code_label.sql`)

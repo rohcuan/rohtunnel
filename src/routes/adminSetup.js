@@ -71,6 +71,7 @@ module.exports = (db) => {
         adjust: getSetting("notif_adjust") === "1",
         purchase: getSetting("notif_purchase") === "1",
       },
+      botConfigured: !!getSetting("telegram_bot_token"),
       msg: req.query.msg || null,
     });
   });

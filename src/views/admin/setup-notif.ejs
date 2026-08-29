@@ -1,29 +1,46 @@
 <%- include('../partials/head') %>
-  <div class="page-title">
-    <h1>Setup Notifikasi Telegram</h1>
-    <p><a href="/admin/setup" class="muted-link">← Setup</a></p>
+  <div class="header-section">
+    <div>
+      <div class="page-title">Setup Notifikasi Telegram</div>
+      <div class="page-subtitle">Pilih notifikasi apa saja yang dikirim ke bot Telegram.</div>
+      <span class="cfg-status <%= botConfigured ? 'on' : 'off' %>" style="margin-top:10px;">
+        <% if (botConfigured) { %>
+          &#9679; Bot terkonfigurasi
+        <% } else { %>
+          &#9675; Bot belum terkonfigurasi &mdash; atur di <a href="/admin/setup-telegram" style="color:var(--primary);">Atur Bot Telegram</a>
+        <% } %>
+      </span>
+    </div>
+    <a href="/admin/setup" class="btn btn-outline btn-sm">← Setup</a>
   </div>
 
   <% if (msg) { %><div class="alert alert-success"><%= msg %></div><% } %>
 
-  <div class="card">
+  <div class="card" style="max-width:640px;">
+    <h2 style="font-size:16px;margin-bottom:12px;">Notifikasi Aktif</h2>
     <form method="post" action="/admin/setup-notif">
-      <label class="check-row">
+      <label class="notif-item">
         <input type="checkbox" name="notif_topup" value="1" <%= notif.topup ? 'checked' : '' %>>
-        Topup QRIS lunas
+        <span class="txt">
+          <span class="t">Terima notif topup saldo via QRIS</span>
+          <span class="d">Setiap ada user yang menyelesaikan pembayaran topup saldo lewat QRIS.</span>
+        </span>
       </label>
-      <label class="check-row">
+      <label class="notif-item">
         <input type="checkbox" name="notif_adjust" value="1" <%= notif.adjust ? 'checked' : '' %>>
-        Penyesuaian saldo oleh admin (topup / kurangi / set)
+        <span class="txt">
+          <span class="t">Terima notif penyesuaian saldo oleh Admin</span>
+          <span class="d">Setiap saldo panel diisi / diubah lewat dashboard admin (Topup, Set Saldo, Kurangi Saldo).</span>
+        </span>
       </label>
-      <label class="check-row">
+      <label class="notif-item">
         <input type="checkbox" name="notif_purchase" value="1" <%= notif.purchase ? 'checked' : '' %>>
-        Pembelian / renew / recovery VPN
+        <span class="txt">
+          <span class="t">Terima notif pembelian paket</span>
+          <span class="d">Setiap pembelian / perpanjangan / recovery akun VPN.</span>
+        </span>
       </label>
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Simpan</button>
-      </div>
-      <p class="muted">Notifikasi dikirim ke Telegram hanya jika bot sudah dikonfigurasi.</p>
+      <button type="submit" class="btn btn-primary" style="margin-top:14px;">Simpan Notifikasi</button>
     </form>
   </div>
 <%- include('../partials/footer') %>

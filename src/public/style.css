@@ -230,6 +230,40 @@ a.card:hover { border-color: var(--primary); text-decoration: none; }
 .header-section h2 { font-size: 18px; }
 
 .page-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+.page-subtitle:has(+ .cfg-status) { margin-bottom: 8px; }
+.cfg-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.cfg-status.on { background: #d1fae5; color: #065f46; }
+.cfg-status.off { background: #f3f4f6; color: #6b7280; }
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.notif-item:hover { background: #f9fafb; }
+.notif-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+.notif-item .txt { display: flex; flex-direction: column; gap: 3px; }
+.notif-item .t { font-size: 14px; font-weight: 600; color: #374151; }
+.notif-item .d { font-size: 12.5px; color: #6b7280; line-height: 1.5; }
 .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .menu-grid .btn { width: 100%; }
 @media (max-width: 900px) {
