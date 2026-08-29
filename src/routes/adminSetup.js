@@ -9,6 +9,7 @@ const { getSetting, setSetting } = require("../config");
 const { DB_PATH } = require("../db");
 const telegram = require("../services/telegram");
 const backup = require("../services/backup");
+const restore = require("../services/restore");
 
 const DATA_DIR = path.dirname(DB_PATH);
 const upload = multer({
@@ -167,14 +168,23 @@ module.exports = (db) => {
 
   router.post("/admin/restore", requireAdmin, upload.single("backup_file"), (req, res) => {
     if (!req.file) {
-      return res.redirect("/admin/restore?error=" + encodeURIComponent("Pilih file backup .db"));
+      return res.redirect("/admin/restore?error=" + encodeURIComponent("Pilih file backup (.zip)"));
     }
-    fs.writeFileSync(path.join(DATA_DIR, "restore-pending.db"), req.file.buffer);
+    let manifest;
+    try {
+      manifest = restore.validate(req.file.buffer);
+    } catch (e) {
+      return res.redirect(
+        "/admin/restore?error=" +
+          encodeURIComponent(`File bukan backup RohTunnel yang valid: ${e.message}`)
+      );
+    }
+    fs.writeFileSync(path.join(DATA_DIR, "restore-pending.zip"), req.file.buffer);
     fs.writeFileSync(path.join(DATA_DIR, ".restore-pending"), new Date().toISOString());
     res.redirect(
       "/admin/restore?msg=" +
         encodeURIComponent(
-          "File diterima. Database akan dipulihkan otomatis saat container restart berikutnya."
+          `Backup diterima & valid (${manifest.tables.length} tabel). Data akan dipulihkan saat container restart berikutnya.`
         )
     );
   });

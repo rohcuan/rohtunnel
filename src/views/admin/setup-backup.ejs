@@ -61,7 +61,7 @@
             <tr>
               <td class="cell-mono"><%= b.name %></td>
               <td><%= (b.size / 1024).toFixed(1) %> KB</td>
-              <td><%= new Date(b.name.replace('rohtunnel-','').replace('.db','').replace(/-(\d{6})/, ' $1')).toLocaleString('id-ID') %></td>
+              <td><%= new Date(b.name.replace('rohtunnel-','').replace('.zip','').replace(/-(\d{6})/, ' $1')).toLocaleString('id-ID') %></td>
             </tr>
           <% }) %>
         </tbody>

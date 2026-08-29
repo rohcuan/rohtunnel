@@ -7,29 +7,34 @@ const Database = require("better-sqlite3");
 const DB_PATH =
   process.env.DB_PATH || path.join(__dirname, "..", "data", "rohtunnel.db");
 
-function applyPendingRestore() {
+function applyPendingRestore(db) {
+  const { importFromZip } = require("./services/restore");
   const dataDir = path.dirname(DB_PATH);
-  const pending = path.join(dataDir, "restore-pending.db");
+  const pending = path.join(dataDir, "restore-pending.zip");
   const marker = path.join(dataDir, ".restore-pending");
 
-  if (fs.existsSync(marker) && fs.existsSync(pending)) {
-    fs.copyFileSync(
-      DB_PATH,
-      path.join(dataDir, `pre-restore-${Date.now()}.db`)
+  if (!(fs.existsSync(marker) && fs.existsSync(pending))) return;
+
+  fs.copyFileSync(DB_PATH, path.join(dataDir, `pre-restore-${Date.now()}.db`));
+
+  try {
+    const result = require("./services/restore").importFromZip(
+      db,
+      fs.readFileSync(pending)
     );
-    fs.rmSync(DB_PATH, { force: true });
-    fs.rmSync(DB_PATH + "-wal", { force: true });
-    fs.rmSync(DB_PATH + "-shm", { force: true });
-    fs.copyFileSync(pending, DB_PATH);
-    fs.rmSync(marker);
-    fs.rmSync(pending);
-    console.log("[restore] DB dipulihkan dari restore-pending.db");
+    fs.rmSync(pending, { force: true });
+    fs.rmSync(marker, { force: true });
+    console.log(
+      `[restore] data dipulihkan dari restore-pending.zip (${result.tableCount} tabel)`
+    );
+  } catch (e) {
+    fs.rmSync(marker, { force: true });
+    console.error(`[restore] GAGAL, data lama tetap dipakai: ${e.message}`);
   }
 }
 
 function initDb() {
   fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-  applyPendingRestore();
 
   const db = new Database(DB_PATH);
   db.pragma("journal_mode = WAL");
@@ -68,6 +73,8 @@ function initDb() {
     apply(version, file, sql);
     console.log(`[db] migrasi diterapkan: ${file}`);
   }
+
+  applyPendingRestore(db);
 
   return db;
 }

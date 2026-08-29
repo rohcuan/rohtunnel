@@ -8,17 +8,19 @@
   <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
 
   <div class="card">
-    <h3>Upload File Backup (.db)</h3>
+    <h3>Upload File Backup (.zip)</h3>
     <form method="post" action="/admin/restore" enctype="multipart/form-data">
-      <input type="file" name="backup_file" accept=".db" required>
+      <input type="file" name="backup_file" accept=".zip,application/zip" required>
       <div class="form-actions">
         <button type="submit" class="btn btn-primary"
-                onclick="return confirm('Database AKAN DITIMPA saat restart berikutnya. Lanjutkan?');">Upload &amp; Restore</button>
+                onclick="return confirm('Data aplikasi AKAN DIGANTI oleh isi backup saat restart berikutnya. Lanjutkan?');">Upload &amp; Restore</button>
       </div>
     </form>
     <div class="alert">
-      <strong>Penting:</strong> DB lama diarsipkan otomatis sebagai <code>pre-restore-*.db</code>.
-      Restore diterapkan saat container restart berikutnya (di Portainer: redeploy stack / restart container).
+      <strong>Penting:</strong> Backup adalah arsip ZIP berisi data (JSON per tabel) + file aset.
+      Dipulihkan <em>setelah migrasi database</em> sehingga aman antar-version. DB lama
+      diarsipkan otomatis sebagai <code>pre-restore-*.db</code>. Restore diterapkan saat
+      container restart berikutnya (di Portainer: redeploy stack / restart container).
     </div>
   </div>
 
