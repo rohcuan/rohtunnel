@@ -3,7 +3,7 @@
 :root {
   --primary: #ec4899;
   --primary-dark: #d63384;
-  --grad: linear-gradient(135deg, #ec4899 0%, #7209b7 100%);
+  --grad: linear-gradient(135deg, #7209b7 0%, #ec4899 100%);
   --bg: #f0f2f5;
   --card: #ffffff;
   --text: #1a1a2e;
