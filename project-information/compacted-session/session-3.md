@@ -37,6 +37,8 @@ Melanjutkan `session-2.md §7` (yang berhenti di badge kode+negara, `2130468`):
 
 ## 3. Dashboard Admin & Setup Notifikasi imitasi Rohtembak-XL
 
+- **Relabel seluruh situs (setelah sesi 2)**: gradien & aksen pindah dari indigo `#4361ee` → **pink `#ec4899`** (dark `#d63384`) menuju ungu `#7209b7`; gradien `135deg #ec4899 → #7209b7`. Semua konsumen `var(--primary)/--grad` ikut (tombol, navbar, banner, login, tab aktif, chip, focus ring `rgba(236,72,153,.15)`, accent checkbox). Alasan user: situs lain sudah pakai aksen indigo-purple. `.badge-country` jadi pink tint `#fce7f3/#a21caf`
+
 Referensi tetap dibaca READ-ONLY dari repo privat `rohcuan/rohtembak-xl` via `gh api` (authenticated rohcuan, scope `repo`) — jangan pernah diubah.
 
 - **Dashboard admin** (`e2f2150`): header `page-title` "Dashboard Admin" + `page-subtitle` "Atur semuanya disini" (imitasi `dashboard.html` berjudul 'Dashboard'); kartu **Menu** dengan `.menu-grid` (2 kolom → 1 kolom ≤900px) berisi 9 tombol `.btn-outline` full-width: Kelola User, Manage Server, Manager Akun VPN, QRIS API, Bot Telegram, Notif Bot Telegram, Auto Backup, Template Config, Restore Backup
