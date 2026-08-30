@@ -1,8 +1,12 @@
 <%- include('partials/head') %>
+  <div class="header-section">
+    <div>
+      <div class="page-title">Dashboard User</div>
+      <div class="page-subtitle">Selamat datang kembali, <%= user.username %>!</div>
+    </div>
+  </div>
+
   <div class="banner">
-    <h2>Halo, <%= user.username %>!</h2>
-    <p class="banner-sub">Selamat datang kembali di dashboard Anda.</p>
-    <div class="banner-isep"></div>
     <div class="banner-grid">
       <div class="banner-item">
         <div class="label">Saldo</div>
@@ -18,22 +22,16 @@
       </div>
     </div>
   </div>
-  <div class="card-grid">
-    <a href="/beli" class="card">
-      <h3>Beli VPN</h3>
-      <p>Pilih server, protocol, dan package.</p>
-    </a>
-    <a href="/akun" class="card">
-      <h3>Akun VPN Saya</h3>
-      <p>Kelola akun &amp; lihat config siap pakai.</p>
-    </a>
-    <a href="/topup" class="card">
-      <h3>Topup Saldo</h3>
-      <p>Isi saldo via QRIS.</p>
-    </a>
-    <a href="<%= contactAdmin %>" target="_blank" rel="noopener" class="card">
-      <h3>Hubungi Admin</h3>
-      <p>Butuh bantuan? Hubungi admin kami.</p>
-    </a>
+
+  <div class="card">
+    <div class="header-section">
+      <h2>Menu</h2>
+    </div>
+    <div class="menu-grid">
+      <a href="/beli" class="btn btn-outline">Beli VPN</a>
+      <a href="/akun" class="btn btn-outline">Akun VPN Saya</a>
+      <a href="/topup" class="btn btn-outline">Topup Saldo</a>
+      <a href="<%= contactAdmin %>" target="_blank" rel="noopener" class="btn btn-outline">Hubungi Admin</a>
+    </div>
   </div>
 <%- include('partials/footer') %>

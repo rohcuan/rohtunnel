@@ -38,6 +38,7 @@ Melanjutkan `session-2.md §7` (yang berhenti di badge kode+negara, `2130468`):
 ## 3. Dashboard Admin & Setup Notifikasi imitasi Rohtembak-XL
 
 - **Relabel seluruh situs (setelah sesi 2)**: gradien & aksen dari indigo `#4361ee` → **ungu sebagai aksen** `--primary #7209b7` (dark `#5a0496`, focus ring `rgba(114,9,183,.15)`); gradien `135deg #7209b7 → #ec4899` (ungu kiri-atas → pink kanan-bawah, urutan dibalik atas permintaan user). Semua konsumen `var(--primary)/--grad` ikut (tombol, navbar, banner, login, tab aktif, chip, accent checkbox). Alasan user: situs lain sudah pakai aksen indigo-purple lalu aksen jadi ungu. `.badge-country` ungu tint `#f3e8ff/#7e22ce`
+- **User dashboard mengikuti struktur admin dashboard**: header `page-title "Dashboard User"` + `page-subtitle "Selamat datang kembali, <username>!"`, banner statistik (Saldo/Akun VPN Aktif/Total Akun), lalu SATU kartu "Menu" dengan `.menu-grid` tombol `.btn-outline` (Beli VPN, Akun VPN Saya, Topup Saldo, Hubungi Admin) — menggantikan kartu-kartu terpisah `.card-grid`
 
 Referensi tetap dibaca READ-ONLY dari repo privat `rohcuan/rohtembak-xl` via `gh api` (authenticated rohcuan, scope `repo`) — jangan pernah diubah.
 
