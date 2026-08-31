@@ -46,6 +46,8 @@ app.use((req, res, next) => {
     "https://t.me/your_admin_here"
   );
   res.locals.hideSaldo = false;
+  res.locals.countryName = (c) =>
+    ({ id: "Indonesia", sg: "Singapura", us: "Amerika Serikat" }[c] || c);
   res.locals.formatRupiah = (n) =>
     "Rp" + Number(n || 0).toLocaleString("id-ID");
   res.locals.statusLabel = (s) =>

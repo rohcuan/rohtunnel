@@ -13,7 +13,7 @@
     <div class="server-info">
       <div class="server-name">
         <span class="badge badge-country"><%= server.code %></span>
-        <span class="server-country"><%= server.country.toUpperCase() %></span>
+        <span class="server-country"><%= countryName(server.country) %></span>
       </div>
       <div class="server-label"><%= server.label %></div>
     </div>
