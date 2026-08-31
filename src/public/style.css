@@ -221,6 +221,127 @@ a.card:hover { border-color: var(--primary); text-decoration: none; }
 .page-title h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
 .page-title p { color: var(--muted); font-size: 14px; }
 
+/* ============ Topup & QRIS floating window ============ */
+.saldo-box { background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; }
+.saldo-box h3 { margin: 0 0 12px; font-size: .85rem; text-transform: uppercase; letter-spacing: .5px; color: #6b7280; }
+.saldo-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: .9rem; }
+.saldo-row .k { color: #6b7280; }
+.saldo-row .v { font-weight: 600; color: #111; }
+.saldo-row.total { border-top: 1px solid #e5e7eb; margin-top: 8px; padding-top: 12px; }
+.saldo-row.total .k { color: #111; font-weight: 600; }
+.saldo-row.total .v { color: #059669; font-size: 1.05rem; }
+
+.amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.amount-btn {
+  border: 1px solid #e5e7eb; background: #fff; border-radius: 8px;
+  padding: 10px 6px; font-size: .88rem; font-weight: 600; color: #374151;
+  cursor: pointer; transition: all .15s ease; text-align: center;
+}
+.amount-btn:hover { border-color: #9ca3af; }
+.amount-btn.active { border-color: #059669; background: #ecfdf5; color: #047857; }
+@media (max-width: 480px) { .amount-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.topup-note {
+  margin-top: 12px; padding: 10px 12px; border-radius: 8px;
+  background: #fffbeb; border: 1px solid #fde68a; color: #92400e; font-size: .8rem; line-height: 1.5;
+}
+
+.qr-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.55); display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.qr-overlay.show { display: flex; }
+.qr-window {
+  background: #fff; border-radius: 14px; padding: 24px;
+  max-width: 360px; width: 100%; text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  position: relative;
+}
+.qr-window .qr-close {
+  position: absolute; top: 10px; right: 14px;
+  background: none; border: none; font-size: 1.4rem;
+  color: #6b7280; cursor: pointer; line-height: 1;
+}
+.qr-window .qr-close:hover { color: #111; }
+.qr-window h3 { margin: 0 0 4px; font-size: 1rem; color: #111; }
+.qr-window p { margin: 0 0 14px; font-size: .8rem; color: #6b7280; }
+.qr-window img.qr-img {
+  width: 240px; height: 240px; border-radius: 8px;
+  border: 1px solid #e5e7eb; background: #fff;
+}
+.qr-window .qr-total { margin-top: 12px; font-size: .9rem; color: #111; }
+.qr-window .qr-total strong { color: #059669; font-size: 1rem; }
+.qr-window .qr-hint { margin-top: 14px; font-size: .72rem; color: #9ca3af; line-height: 1.5; }
+.spinner {
+  width: 54px; height: 54px; margin: 40px auto 16px;
+  border: 5px solid #e5e7eb; border-top-color: #059669;
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.qr-window .load-error {
+  display: none; margin-top: 12px; padding: 10px 12px; border-radius: 8px;
+  background: #fef2f2; color: #991b1b; font-size: .8rem; line-height: 1.5;
+  text-align: left;
+}
+.qr-window .load-error.show { display: block; }
+.qr-window .success-title { color: #059669; font-size: 1.15rem; margin-bottom: 6px; }
+.success-box {
+  text-align: left; background: #f8f9fa; border: 1px solid #e5e7eb;
+  border-radius: 10px; padding: 14px 16px; margin-top: 16px;
+}
+.success-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: .88rem; }
+.success-row .k { color: #6b7280; }
+.success-row .v { font-weight: 600; color: #111; }
+.success-row .v.added { color: #059669; font-size: 1.05rem; }
+.success-row.total { border-top: 1px solid #e5e7eb; margin-top: 6px; padding-top: 12px; }
+.success-row.total .k { color: #111; font-weight: 600; }
+.success-row.total .v { color: #059669; font-size: 1.15rem; }
+
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1001;
+  background: rgba(0,0,0,.55); display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: #fff; border-radius: 14px; padding: 20px;
+  max-width: 380px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,.35);
+}
+.modal h3 { margin: 0 0 8px; font-size: 1rem; color: #111; }
+.modal .modal-body { font-size: .85rem; color: #374151; line-height: 1.6; }
+.modal .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.modal .modal-actions .btn { flex: 1; }
+
+/* ============ Riwayat Saldo Panel ============ */
+.topup-table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+.topup-table th {
+  text-align: left; padding: 8px 10px; color: #6b7280; font-weight: 600;
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .4px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.topup-table td { padding: 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+.topup-table tr:last-child td { border-bottom: none; }
+.topup-cards { display: none; }
+@media (max-width: 640px) {
+  .topup-table-wrap { display: none; }
+  .topup-cards { display: grid; gap: 10px; }
+}
+.topup-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px 14px; }
+.tc-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.tc-time { font-size: .78rem; color: #6b7280; }
+.tc-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; font-size: .86rem; gap: 12px; }
+.tc-row .k { color: #6b7280; white-space: nowrap; }
+.tc-row .v { font-weight: 600; color: #111; text-align: right; }
+.tc-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f3f4f6; flex-wrap: wrap; }
+.btn-mini {
+  background: #047857; color: #fff; border: none; border-radius: 6px;
+  padding: 5px 10px; font-size: .74rem; font-weight: 600; cursor: pointer;
+  white-space: nowrap; display: inline-block; text-decoration: none;
+}
+.btn-mini:hover { background: #065f46; text-decoration: none; }
+.btn-mini:disabled { background: #9ca3af; cursor: not-allowed; }
+
 .header-section {
   display: flex;
   align-items: center;
