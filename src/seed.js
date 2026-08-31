@@ -112,7 +112,7 @@ function ensureSeed(db) {
     const password = process.env.ADMIN_PASSWORD || "admin";
 
     db.prepare(
-      "INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, 1)"
+      "INSERT INTO users (username, password, is_admin) VALUES (?, ?, 1)"
     ).run(username, password);
 
     console.log(`[seed] admin dibuat: ${username} / ${password} — segera ganti password!`);

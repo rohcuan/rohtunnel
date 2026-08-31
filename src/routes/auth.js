@@ -66,7 +66,7 @@ module.exports = (db) => {
     }
 
     const info = db
-      .prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)")
+      .prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)")
       .run(username, email, password);
 
     createSession(db, info.lastInsertRowid, res);
@@ -83,7 +83,7 @@ module.exports = (db) => {
     const password = req.body.password || "";
 
     const user = findUserByIdentifier.get(identifier, identifier);
-    if (!user || password !== user.password_hash) {
+    if (!user || password !== user.password) {
       return res
         .status(401)
         .render("login", { title: "Masuk", error: "Username/email atau password salah" });
@@ -111,7 +111,7 @@ module.exports = (db) => {
     const password = req.body.password || "";
 
     const user = findUserByIdentifier.get(identifier, identifier);
-    if (!user || !user.is_admin || password !== user.password_hash) {
+    if (!user || !user.is_admin || password !== user.password) {
       return res
         .status(401)
         .render("login-admin", { title: "Login Admin", error: "Kredensial admin salah" });
