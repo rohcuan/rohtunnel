@@ -640,7 +640,7 @@ body.login-page {
 .checkout-section.hidden { display: none; }
 
 /* ============ List server (kartu panjang) ============ */
-.list-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.list-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .list-head h3 { margin: 0; }
 .server-list-card { border: 1px solid var(--border-light); }
 .server-list-card-edit { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(114,9,183,0.15); }
