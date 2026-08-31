@@ -10,6 +10,16 @@ const { loadUser } = require("./middleware/auth");
 const { startPaymentWatcher } = require("./jobs/paymentWatcher");
 const { startBackupWatcher } = require("./jobs/backupWatcher");
 
+const cssV = String(
+  (() => {
+    try {
+      return require("fs").statSync(path.join(__dirname, "public", "style.css")).mtimeMs;
+    } catch (e) {
+      return Date.now();
+    }
+  })()
+);
+
 const db = initDb();
 ensureSeed(db);
 setDb(db);
@@ -28,6 +38,7 @@ app.use(loadUser(db));
 app.use((req, res, next) => {
   res.locals.user = req.user;
   res.locals.bodyClass = null;
+  res.locals.cssV = cssV;
   res.locals.siteName = getSetting("site_name", "RohTunnel");
   res.locals.contactAdmin = getSetting(
     "contact_admin",
