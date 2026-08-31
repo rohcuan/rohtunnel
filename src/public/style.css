@@ -626,11 +626,13 @@ body.login-page {
 }
 .server-card-box {
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   gap: 12px;
   padding: 20px;
   min-height: 160px;
 }
+.server-card-box .server-name { justify-content: center; }
 .server-card-box .server-flag img { width: 72px; height: 46px; }
 .server-country-full {
   font-size: 11px;

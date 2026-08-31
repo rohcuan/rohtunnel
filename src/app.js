@@ -47,7 +47,11 @@ app.use((req, res, next) => {
   );
   res.locals.hideSaldo = false;
   res.locals.countryName = (c) =>
-    ({ id: "Indonesia", sg: "Singapura", us: "Amerika Serikat" }[c] || c);
+    ({ id: "Indonesia", sg: "Singapura", us: "Amerika Serikat", eu: "Eropa" }[c] || c);
+  res.locals.countryLabel = (c) => {
+    const code = { id: "ID", sg: "SG", us: "USA", eu: "EU" }[c];
+    return res.locals.countryName(c) + (code ? ` (${code})` : "");
+  };
   res.locals.formatRupiah = (n) =>
     "Rp" + Number(n || 0).toLocaleString("id-ID");
   res.locals.statusLabel = (s) =>

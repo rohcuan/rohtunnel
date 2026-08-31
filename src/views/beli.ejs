@@ -12,14 +12,15 @@
   <div class="card">
     <div class="filter-chips">
       <button type="button" class="chip chip-active" data-country="">Semua</button>
-      <button type="button" class="chip" data-country="id"><img src="/flags/id.svg" alt="Indonesia" class="chip-flag"> Indonesia</button>
-      <button type="button" class="chip" data-country="sg"><img src="/flags/sg.svg" alt="Singapura" class="chip-flag"> Singapura</button>
-      <button type="button" class="chip" data-country="us"><img src="/flags/us.svg" alt="Amerika Serikat" class="chip-flag"> Amerika Serikat</button>
+      <button type="button" class="chip" data-country="id"><img src="/flags/id.svg" alt="Indonesia" class="chip-flag"> <%= countryLabel('id') %></button>
+      <button type="button" class="chip" data-country="sg"><img src="/flags/sg.svg" alt="Singapura" class="chip-flag"> <%= countryLabel('sg') %></button>
+      <button type="button" class="chip" data-country="us"><img src="/flags/us.svg" alt="Amerika Serikat" class="chip-flag"> <%= countryLabel('us') %></button>
+      <button type="button" class="chip" data-country="eu"><img src="/flags/eu.svg" alt="Eropa" class="chip-flag"> <%= countryLabel('eu') %></button>
     </div>
     <div class="server-grid">
       <% servers.forEach(s => { %>
         <a class="server-card server-card-box" data-country="<%= s.country %>" href="/beli/<%= s.id %>">
-          <div class="server-country-full"><%= countryName(s.country) %></div>
+          <div class="server-country-full"><%= countryLabel(s.country) %></div>
           <div class="server-flag">
             <img src="/flags/<%= s.country %>.svg" alt="<%= countryName(s.country) %>">
           </div>
