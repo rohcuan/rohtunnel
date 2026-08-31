@@ -41,10 +41,6 @@ app.use((req, res, next) => {
   res.locals.bodyClass = null;
   res.locals.cssV = cssV;
   res.locals.siteName = getSetting("site_name", "RohTunnel");
-  res.locals.contactAdmin = getSetting(
-    "contact_admin",
-    "https://t.me/your_admin_here"
-  );
   res.locals.hideSaldo = false;
   res.locals.countryName = (c) =>
     ({ id: "Indonesia", sg: "Singapura", us: "Amerika Serikat", eu: "Eropa" }[c] || c);
