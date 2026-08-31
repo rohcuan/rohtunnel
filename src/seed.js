@@ -1,7 +1,5 @@
 "use strict";
 
-const bcrypt = require("bcryptjs");
-
 const DEFAULT_SETTINGS = {
   site_name: "RohTunnel",
   contact_admin: "https://t.me/your_admin_here",
@@ -113,10 +111,9 @@ function ensureSeed(db) {
     const username = process.env.ADMIN_USERNAME || "admin";
     const password = process.env.ADMIN_PASSWORD || "admin";
 
-    const hash = bcrypt.hashSync(password, 10);
     db.prepare(
       "INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, 1)"
-    ).run(username, hash);
+    ).run(username, password);
 
     console.log(`[seed] admin dibuat: ${username} / ${password} — segera ganti password!`);
   }

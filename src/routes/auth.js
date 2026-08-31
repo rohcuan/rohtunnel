@@ -1,7 +1,6 @@
 "use strict";
 
 const express = require("express");
-const bcrypt = require("bcryptjs");
 const { createSession, destroySession } = require("../middleware/auth");
 
 const USERNAME_RE = /^[a-z0-9]{3,20}$/;
@@ -66,10 +65,9 @@ module.exports = (db) => {
         .render("register", { title: "Daftar", error: "Email sudah terdaftar" });
     }
 
-    const hash = bcrypt.hashSync(password, 10);
     const info = db
       .prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)")
-      .run(username, email, hash);
+      .run(username, email, password);
 
     createSession(db, info.lastInsertRowid, res);
     res.redirect("/dashboard");
@@ -85,7 +83,7 @@ module.exports = (db) => {
     const password = req.body.password || "";
 
     const user = findUserByIdentifier.get(identifier, identifier);
-    if (!user || !bcrypt.compareSync(password, user.password_hash)) {
+    if (!user || password !== user.password_hash) {
       return res
         .status(401)
         .render("login", { title: "Masuk", error: "Username/email atau password salah" });
@@ -113,7 +111,7 @@ module.exports = (db) => {
     const password = req.body.password || "";
 
     const user = findUserByIdentifier.get(identifier, identifier);
-    if (!user || !user.is_admin || !bcrypt.compareSync(password, user.password_hash)) {
+    if (!user || !user.is_admin || password !== user.password_hash) {
       return res
         .status(401)
         .render("login-admin", { title: "Login Admin", error: "Kredensial admin salah" });
