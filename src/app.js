@@ -36,6 +36,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(loadUser(db));
 
 app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-cache");
   res.locals.user = req.user;
   res.locals.bodyClass = null;
   res.locals.cssV = cssV;
