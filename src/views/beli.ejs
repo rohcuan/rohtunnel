@@ -18,7 +18,7 @@
     </div>
     <div class="server-grid">
       <% servers.forEach(s => { %>
-        <a class="server-card" data-country="<%= s.country %>" href="/beli/<%= s.id %>">
+        <a class="server-card server-card-box" data-country="<%= s.country %>" href="/beli/<%= s.id %>">
           <div class="server-flag">
             <img src="/flags/<%= s.country %>.svg" alt="<%= s.country.toUpperCase() %>">
           </div>
