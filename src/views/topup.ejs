@@ -38,6 +38,10 @@
         <span class="k">Nominal topup</span>
         <span class="v" id="sum-nominal">0 IDR</span>
       </div>
+      <div class="saldo-row">
+        <span class="k">Kode unik / biaya admin</span>
+        <span class="v">acak 1&ndash;250 IDR</span>
+      </div>
       <div class="saldo-row total">
         <span class="k">Total yang dibayarkan</span>
         <span class="v" id="sum-total">0 IDR</span>
@@ -74,7 +78,10 @@
         <h3>Scan QRIS</h3>
         <p>Selesaikan pembayaran dengan memindai kode QR ini.</p>
         <img class="qr-img" id="qr-img" alt="QRIS" src="">
-        <div class="qr-total">Total: <strong id="qr-total">&mdash;</strong></div>
+        <div class="qr-total">
+          Nominal: <span id="qr-nominal">&mdash;</span> &middot; Kode unik: <span id="qr-fee">&mdash;</span><br>
+          Total: <strong id="qr-total">&mdash;</strong>
+        </div>
         <div style="margin-top:10px;font-size:.85rem;color:#374151;">
           Sisa waktu: <strong id="qr-timer" style="font-family:ui-monospace,monospace;">&mdash;</strong>
         </div>
@@ -172,7 +179,7 @@
             msgEl.style.display = 'block';
             return;
           }
-          loadQr(res.id, res.amount, res.total);
+          loadQr(res.id, res.amount, res.fee, res.total);
         })
         .catch(function(e) {
           btn.disabled = false;
@@ -182,10 +189,10 @@
         });
     }
 
-    function loadQr(topupId, amount, total) {
+    function loadQr(topupId, amount, fee, total) {
       currentTopupId = topupId;
-      currentQrParams = { id: topupId, amount: amount, total: total };
-      showQrLoading(amount, total);
+      currentQrParams = { id: topupId, amount: amount, fee: fee, total: total };
+      showQrLoading(amount, fee, total);
       fetchQr();
     }
 
@@ -210,8 +217,10 @@
         });
     }
 
-    function showQrLoading(amount, total) {
+    function showQrLoading(amount, fee, total) {
       qrExpires = 0;
+      document.getElementById('qr-nominal').textContent = fmtIdr(amount) + ' IDR';
+      document.getElementById('qr-fee').textContent = fmtIdr(fee) + ' IDR';
       document.getElementById('qr-total').textContent = fmtIdr(total) + ' IDR';
       setQrViewState('loading');
       document.getElementById('qr-overlay').classList.add('show');

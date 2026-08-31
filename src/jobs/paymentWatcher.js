@@ -35,7 +35,8 @@ async function checkAndSettle(db, t) {
   }
 
   try {
-    const json = await qris.checkPayment(t.amount, t.trx_id);
+    const total = t.total || t.amount + (t.fee || 0);
+    const json = await qris.checkPayment(total, t.trx_id);
     if (json && json.paid) {
       const settled = settleTopup(db, t);
       if (settled) {

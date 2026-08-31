@@ -7,6 +7,8 @@ const { checkAndSettle, QRIS_TTL_MS } = require("../jobs/paymentWatcher");
 
 const MIN_TOPUP = 5000;
 const MAX_TOPUP = 10000000;
+const FEE_MIN = 1;
+const FEE_MAX = 250;
 const CHECK_COOLDOWN = 10; // detik antar pengecekan manual
 
 module.exports = (db) => {
@@ -14,6 +16,10 @@ module.exports = (db) => {
 
   const getTopup = db.prepare(
     "SELECT * FROM topups WHERE id = ? AND user_id = ?"
+  );
+  const insertTopup = db.prepare(
+    `INSERT INTO topups (user_id, amount, fee, total, qris_id, trx_id, qris_url, status, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)`
   );
 
   function historyRows(userId) {
@@ -27,8 +33,8 @@ module.exports = (db) => {
           kind: "topup",
           id: t.id,
           amount: t.amount,
-          fee: 0,
-          total: t.amount,
+          fee: t.fee || 0,
+          total: t.total || t.amount + (t.fee || 0),
           status: t.status,
           desc: "Topup QRIS",
           ts: t.created_at,
@@ -99,21 +105,43 @@ module.exports = (db) => {
       });
     }
     try {
-      const data = await qris.createQris(amount);
-      const info = db
-        .prepare(
-          `INSERT INTO topups (user_id, amount, qris_id, trx_id, qris_url, status, created_at)
-           VALUES (?, ?, ?, ?, ?, 'pending', ?)`
-        )
-        .run(
+      // Gateway match pembayaran by nominal → total (amount+fee) harus unik
+      // di antara topup pending. Fee acak 1..250, retry sampai total bebas.
+      let created = null;
+      for (let i = 0; i < 60; i++) {
+        const fee = FEE_MIN + Math.floor(Math.random() * (FEE_MAX - FEE_MIN + 1));
+        const total = amount + fee;
+        const clash = db
+          .prepare("SELECT 1 FROM topups WHERE status = 'pending' AND total = ?")
+          .get(total);
+        if (clash) continue;
+        const data = await qris.createQris(total);
+        created = insertTopup.run(
           req.user.id,
           amount,
+          fee,
+          total,
           data.qris_id,
           data.trx_id,
           data.qris_url,
           new Date().toISOString()
         );
-      res.json({ ok: true, id: info.lastInsertRowid, amount, fee: 0, total: amount });
+        break;
+      }
+      if (!created) {
+        return res.json({
+          ok: false,
+          message: "Semua kode unik sedang terpakai. Coba lagi beberapa menit.",
+        });
+      }
+      const row = db.prepare("SELECT * FROM topups WHERE id = ?").get(created.lastInsertRowid);
+      res.json({
+        ok: true,
+        id: row.id,
+        amount: row.amount,
+        fee: row.fee,
+        total: row.total,
+      });
     } catch (e) {
       res.json({ ok: false, message: `Gagal membuat QRIS: ${e.message}` });
     }

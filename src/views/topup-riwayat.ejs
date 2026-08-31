@@ -16,7 +16,7 @@
     <div class="topup-table-wrap" style="overflow-x:auto;">
       <table class="topup-table">
         <thead>
-          <tr><th>Waktu</th><th>Tipe</th><th>Jumlah</th><th>Keterangan</th><th>Aksi</th></tr>
+          <tr><th>Waktu</th><th>Tipe</th><th>Jumlah</th><th>Kode Unik</th><th>Keterangan</th><th>Aksi</th></tr>
         </thead>
         <tbody>
           <% history.forEach(t => { %>
@@ -26,10 +26,11 @@
             <td style="font-weight:600;color:<%= t.amount >= 0 ? '#059669' : '#dc2626' %>;">
               <%= t.amount >= 0 ? '+' : '-' %><%= formatRupiah(Math.abs(t.amount)) %>
             </td>
+            <td><%= t.kind === 'topup' && t.fee ? t.fee : '-' %></td>
             <td><%= t.desc %></td>
             <td>
               <% if (t.kind === 'topup' && t.show_qris_link) { %>
-              <button type="button" class="btn-mini" onclick="openQr(<%= t.id %>, <%= t.amount %>)">Lihat kode QRIS</button>
+              <button type="button" class="btn-mini" onclick="openQr(<%= t.id %>, <%= t.amount %>, <%= t.fee %>, <%= t.total %>)">Lihat kode QRIS</button>
               <% } else if (t.kind === 'topup' && t.show_check) { %>
               <button type="button" class="btn-mini check-btn" data-id="<%= t.id %>" onclick="manualCheck(this)">Cek Pembayaran</button>
               <% } else { %>&mdash;<% } %>
@@ -48,6 +49,7 @@
           <span><%= t.kind === 'topup' ? 'Topup QRIS' : t.label %></span>
         </div>
         <div class="tc-row"><span class="k">Jumlah</span><span class="v" style="color:<%= t.amount >= 0 ? '#059669' : '#dc2626' %>;"><%= t.amount >= 0 ? '+' : '-' %><%= formatRupiah(Math.abs(t.amount)) %></span></div>
+        <div class="tc-row"><span class="k">Kode Unik</span><span class="v"><%= t.kind === 'topup' && t.fee ? t.fee : '-' %></span></div>
         <div class="tc-row"><span class="k">Keterangan</span><span class="v"><%= t.desc %></span></div>
         <div class="tc-actions">
           <% if (t.kind === 'topup' && t.show_qris_link) { %>
@@ -82,7 +84,10 @@
         <h3>Scan QRIS</h3>
         <p>Selesaikan pembayaran dengan memindai kode QR ini.</p>
         <img class="qr-img" id="qr-img" alt="QRIS" src="">
-        <div class="qr-total">Total: <strong id="qr-total">&mdash;</strong></div>
+        <div class="qr-total">
+          Nominal: <span id="qr-nominal">&mdash;</span> &middot; Kode unik: <span id="qr-fee">&mdash;</span><br>
+          Total: <strong id="qr-total">&mdash;</strong>
+        </div>
         <div style="margin-top:10px;font-size:.85rem;color:#374151;">
           Sisa waktu: <strong id="qr-timer" style="font-family:ui-monospace,monospace;">&mdash;</strong>
         </div>
@@ -174,10 +179,10 @@
         });
     }
 
-    function openQr(topupId, amount) {
+    function openQr(topupId, amount, fee, total) {
       currentTopupId = topupId;
-      currentQrParams = { id: topupId, amount: amount };
-      showQrLoading();
+      currentQrParams = { id: topupId, amount: amount, fee: fee, total: total };
+      showQrLoading(amount, fee, total);
       fetchQr();
     }
 
@@ -202,8 +207,11 @@
         });
     }
 
-    function showQrLoading() {
+    function showQrLoading(amount, fee, total) {
       qrExpires = 0;
+      document.getElementById('qr-nominal').textContent = fmtIdr(amount) + ' IDR';
+      document.getElementById('qr-fee').textContent = fmtIdr(fee) + ' IDR';
+      document.getElementById('qr-total').textContent = fmtIdr(total) + ' IDR';
       setQrViewState('loading');
       document.getElementById('qr-overlay').classList.add('show');
     }

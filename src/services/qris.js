@@ -25,16 +25,16 @@ async function request(path, params) {
   return res.json();
 }
 
-async function createQris(amount) {
-  const json = await request("/create-qris", { amount });
+async function createQris(total) {
+  const json = await request("/create-qris", { amount: total });
   if (!json.success) {
     throw new Error((json.message && json.message.message) || json.message || "Gagal membuat QRIS");
   }
   return json.data;
 }
 
-async function checkPayment(amount, trxId) {
-  return request("/check-payment", { amount, trx_id: trxId });
+async function checkPayment(total, trxId) {
+  return request("/check-payment", { amount: total, trx_id: trxId });
 }
 
 async function tokenStatus() {
