@@ -38,7 +38,7 @@
             </div>
             <div class="server-card-info">
               <span class="server-card-info-label">API Key</span>
-              <span class="server-card-info-value"><%= s.api_key.slice(0, 6) %>...</span>
+              <span class="server-card-info-value"><%= s.api_key || '-' %></span>
             </div>
             <div class="server-card-info">
               <span class="server-card-info-label">Limit VPN</span>
