@@ -33,19 +33,38 @@ module.exports = (db) => {
   const randomPassword = () => crypto.randomBytes(8).toString("base64url");
 
   const renderBeli = (req, res, error, status = 200) => {
-    const selectedId = req.body && req.body.server_id ? parseInt(req.body.server_id, 10) : null;
     return res.status(status).render("beli", {
       title: "Beli VPN",
       user: req.user,
       servers: listServers.all(),
+      error,
+    });
+  };
+
+  const renderCheckout = (req, res, server, error, status = 200) => {
+    return res.status(status).render("beli-checkout", {
+      title: "Checkout — " + server.label,
+      user: req.user,
+      server,
       packages: listActivePackages.all(),
       error,
-      selectedId,
+      values: {
+        protocol: (req.body && req.body.protocol) || "",
+        package_id: (req.body && req.body.package_id) || "",
+        username: (req.body && req.body.username) || "",
+        uuid: (req.body && req.body.uuid) || "",
+      },
     });
   };
 
   router.get("/beli", requireUser, (req, res) => {
     renderBeli(req, res, null);
+  });
+
+  router.get("/beli/:serverId(\\d+)", requireUser, (req, res) => {
+    const server = getServer.get(parseInt(req.params.serverId, 10));
+    if (!server) return res.status(404).render("404", { title: "Tidak ditemukan" });
+    renderCheckout(req, res, server, null);
   });
 
   router.post("/beli", requireUser, async (req, res) => {
@@ -58,21 +77,21 @@ module.exports = (db) => {
     const server = getServer.get(serverId);
     if (!server) return renderBeli(req, res, "Server tidak valid", 400);
 
+    const rerender = (error, status = 400) =>
+      renderCheckout(req, res, server, error, status);
+
     if (!PROTOCOLS.includes(protocol)) {
-      return renderBeli(req, res, "Protocol tidak valid", 400);
+      return rerender("Protocol tidak valid");
     }
 
     const pkg = getPackage.get(packageId);
     if (!pkg || pkg.server_id !== server.id || pkg.protocol !== protocol) {
-      return renderBeli(req, res, "Package tidak valid untuk server/protocol ini", 400);
+      return rerender("Package tidak valid untuk server/protocol ini");
     }
 
     if (req.user.saldo < pkg.price) {
-      return renderBeli(
-        req,
-        res,
-        `Saldo tidak cukup. Butuh ${pkg.price.toLocaleString("id-ID")} rupiah, saldo Anda ${req.user.saldo.toLocaleString("id-ID")}`,
-        400
+      return rerender(
+        `Saldo tidak cukup. Butuh ${pkg.price.toLocaleString("id-ID")} rupiah, saldo Anda ${req.user.saldo.toLocaleString("id-ID")}`
       );
     }
 
@@ -80,19 +99,14 @@ module.exports = (db) => {
       server.limit_vpn > 0 &&
       countServerAccounts.get(server.id).c >= server.limit_vpn
     ) {
-      return renderBeli(req, res, "Kuota akun di server ini sudah penuh", 400);
+      return rerender("Kuota akun di server ini sudah penuh");
     }
 
     if (username && !USERNAME_RE.test(username)) {
-      return renderBeli(
-        req,
-        res,
-        "Username 3-20 karakter (huruf, angka, _ atau -)",
-        400
-      );
+      return rerender("Username 3-20 karakter (huruf, angka, _ atau -)");
     }
     if (uuid && !UUID_RE.test(uuid)) {
-      return renderBeli(req, res, "UUID tidak valid", 400);
+      return rerender("UUID tidak valid");
     }
 
     const finalUsername = username || randomUsername();
@@ -121,12 +135,7 @@ module.exports = (db) => {
         );
       }
     } catch (e) {
-      return renderBeli(
-        req,
-        res,
-        `Gagal membuat akun di server: ${e.message}`,
-        502
-      );
+      return rerender(`Gagal membuat akun di server: ${e.message}`, 502);
     }
 
     const finalize = db.transaction(() => {

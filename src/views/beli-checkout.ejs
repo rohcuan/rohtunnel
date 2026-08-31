@@ -1,0 +1,91 @@
+<%- include('partials/head') %>
+  <div class="page-title">
+    <h1>Checkout</h1>
+    <p><a href="/beli" class="muted-link">← Pilih Server</a></p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="card server-card" style="margin-bottom:16px;">
+    <div class="server-flag">
+      <img src="/flags/<%= server.country %>.svg" alt="<%= server.country.toUpperCase() %>">
+    </div>
+    <div class="server-info">
+      <div class="server-name">
+        <span class="badge badge-country"><%= server.code %></span>
+        <span class="server-country"><%= server.country.toUpperCase() %></span>
+      </div>
+      <div class="server-label"><%= server.label %></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <form method="post" action="/beli">
+      <input type="hidden" name="server_id" value="<%= server.id %>">
+      <div class="row">
+        <label>Protocol
+          <select name="protocol" id="protocol-select" required>
+            <option value="ssh" <%= values.protocol === 'ssh' ? 'selected' : '' %>>SSH Tunnel</option>
+            <option value="vmess" <%= values.protocol === 'vmess' ? 'selected' : '' %>>VMess</option>
+            <option value="vless" <%= values.protocol === 'vless' ? 'selected' : '' %>>VLess</option>
+            <option value="trojan" <%= values.protocol === 'trojan' ? 'selected' : '' %>>Trojan</option>
+          </select>
+        </label>
+        <label>Package
+          <select name="package_id" id="package-select" required></select>
+        </label>
+      </div>
+      <div class="row">
+        <label>Username VPN (opsional, kosong = random)
+          <input type="text" name="username" minlength="3" maxlength="20"
+                 placeholder="Kosongkan untuk random" pattern="[a-zA-Z0-9_-]{3,20}" value="<%= values.username %>">
+        </label>
+        <label id="uuid-row">UUID Custom (opsional, kosong = random)
+          <input type="text" name="uuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" value="<%= values.uuid %>">
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Checkout</button>
+      </div>
+      <p class="muted">Saldo Anda: <strong><%= formatRupiah(user.saldo) %></strong> — dipotong otomatis setelah akun berhasil dibuat di server.</p>
+    </form>
+  </div>
+
+  <script>
+    const PACKAGES = <%- JSON.stringify(packages).replace(/</g, '\\u003c') %>;
+    const protocolSel = document.getElementById('protocol-select');
+    const packageSel = document.getElementById('package-select');
+    const uuidRow = document.getElementById('uuid-row');
+
+    function refreshPackages(keepId) {
+      const list = PACKAGES.filter(p =>
+        p.server_id == <%= server.id %> && p.protocol === protocolSel.value);
+      packageSel.innerHTML = '';
+      if (list.length === 0) {
+        const o = document.createElement('option');
+        o.value = '';
+        o.textContent = 'Belum ada package';
+        packageSel.appendChild(o);
+      }
+      list.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p.id;
+        o.textContent = p.name + ' — Rp' + p.price.toLocaleString('id-ID') +
+          ' (' + p.kuota_gb + ' GB, ' + p.limit_ip + ' IP, ' + p.days + ' hari)';
+        packageSel.appendChild(o);
+      });
+      if (keepId && packageSel.querySelector('option[value="' + keepId + '"]')) {
+        packageSel.value = keepId;
+      }
+    }
+
+    function refreshUuidVisibility() {
+      uuidRow.style.display = protocolSel.value === 'ssh' ? 'none' : 'flex';
+    }
+
+    protocolSel.addEventListener('change', () => { refreshPackages(); refreshUuidVisibility(); });
+
+    refreshPackages(<%= JSON.stringify(values.package_id) %>);
+    refreshUuidVisibility();
+  </script>
+<%- include('partials/footer') %>
